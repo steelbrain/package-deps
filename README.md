@@ -4,7 +4,7 @@ Atom-Package-Deps is a module that lets your atom package depend on other atom p
 
 #### How it works?
 You need to have an array of package deps in your package manifest, like
-```
+```js
 {
   "name": "linter-ruby",
   ...
@@ -17,8 +17,7 @@ module.exports =
   activate: ->
     # Note: `linter-ruby` is the name of the current package
     require('atom-package-deps').install('linter-ruby')
-      .then (shouldIRun) ->
-        return unless shouldIRun
+      .then ->
         console.log('All deps are installed, it's good to go')
 ```
 
