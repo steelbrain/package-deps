@@ -1,0 +1,25 @@
+{
+  "name": "atom-package-deps",
+  "version": "0.0.1",
+  "description": "Automatically install package dependencies",
+  "main": "lib/main",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AtomLinter/package-deps.git"
+  },
+  "keywords": [
+    "atom"
+  ],
+  "author": "steelbrain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AtomLinter/package-deps/issues"
+  },
+  "homepage": "https://github.com/AtomLinter/package-deps#readme",
+  "dependencies": {
+    "atom-linter": "^3.2.0"
+  }
+}
