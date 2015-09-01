@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AtomLinter/package-deps.git"
+    "url": "git+https://github.com/steelbrain/package-deps.git"
   },
   "keywords": [
     "atom"
