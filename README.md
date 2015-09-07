@@ -11,7 +11,7 @@ You need to have an array of package deps in your package manifest, like
   "package-deps": ["linter"]
 }
 ```
-Because the package installation is async, it provides an API to determine if you should do your thing in your package or wait. When dependencies are not installed, Your package is deactivated by deps installer, then dependencies are installed, and then it's activated again. Here's how a consumer would look
+Because the package installation is async, it returns a promise that resolves when all the dependencies have been installed.
 ```coffee
 module.exports =
   activate: ->
