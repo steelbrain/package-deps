@@ -18,8 +18,5 @@
   "bugs": {
     "url": "https://github.com/AtomLinter/package-deps/issues"
   },
-  "homepage": "https://github.com/AtomLinter/package-deps#readme",
-  "dependencies": {
-    "atom-linter": "^3.2.0"
-  }
+  "homepage": "https://github.com/AtomLinter/package-deps#readme"
 }
