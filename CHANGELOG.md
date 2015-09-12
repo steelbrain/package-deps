@@ -1,3 +1,7 @@
+# 2.1.1
+
+* Fix progress bar for multiple dependencies
+
 # 2.1.0
 
 * Introduced second parameter to install method 
