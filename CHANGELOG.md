@@ -1,15 +1,20 @@
-# 2.1.2
+### 2.1.2
 
 * Fix progress bar for multiple dependencies
+* Invoke apm just one time even for multiple dependenciesx
 
-# 2.1.0
+### 2.1.1
+
+* Invoke apm with `--production`
+
+### 2.1.0
 
 * Introduced second parameter to install method 
 
-# 2.0.x
+### 2.0.x
 
 * Made some API breaking changes
 
-# 1.x.x
+### 1.x.x
 
 * Basic API Introduced
