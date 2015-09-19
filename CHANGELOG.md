@@ -1,3 +1,7 @@
+### 2.1.3
+
+* Don't enable already installed packages by default
+
 ### 2.1.2
 
 * Fix progress bar for multiple dependencies
