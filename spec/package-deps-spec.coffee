@@ -9,7 +9,6 @@ describe 'Package-Deps', ->
 
   beforeEach ->
     global.setTimeout = require('remote').getGlobal('setTimeout')
-    console.log(setTimeout)
     PackageDeps.debug?.dispose()
     PackageDeps.debug = new Emitter
 
@@ -25,7 +24,6 @@ describe 'Package-Deps', ->
       )
       PackageDeps.debug.on('installPackage', ->
         packagesInstalled++
-        console.log(packagesInstalled)
       )
       PackageDeps.install('test-dependent-package').then( ->
         expect(packagesToInstall instanceof Array).toBe(true)
