@@ -22,7 +22,7 @@ module.exports =
     # Note: `linter-ruby` is the name of the current package
     require('atom-package-deps').install('linter-ruby', true)
       .then ->
-        console.log('All deps are installed, it's good to go')
+        console.log("All deps are installed, it's good to go")
 ```
 
 #### API
