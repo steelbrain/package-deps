@@ -28,7 +28,7 @@ module.exports =
 #### API
 
 ```js
-function install(packageName, enablePackages = true)
+function install(packageName, enablePackages = false)
 ```
 
 #### License
