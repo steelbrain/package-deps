@@ -2,7 +2,7 @@ describe 'Package-Deps', ->
 
   window.__steelbrain_package_deps = new Set()
 
-  describe '::packagesToInstall', ->
+  describe 'packagesToInstall', ->
     it 'works', ->
       spyOn(atom.packages, 'getLoadedPackage').andReturn({
         metadata: {
@@ -20,7 +20,20 @@ describe 'Package-Deps', ->
       expect(retVal.toEnable).toEqual(['linter'])
       expect(retVal.toInstall).toEqual(['atom-hack'])
 
-  describe '::install', ->
+  describe 'view', ->
+    it 'works', ->
+      advanceClock(1000)
+      {View} = require('../lib/view')
+      view = new View('some-package', ['linter', 'linter-jshint'])
+      view.element = document.createElement('div') # Jasmine and it's spies suck sometimes
+      expect(view.progress.value).toBe(0)
+      expect(view.progress.max).toBe(2)
+      view.advance()
+      expect(view.progress.value).toBe(1)
+      view.advance()
+      expect(view.progress.value).toBe(2)
+
+  describe 'install', ->
     it 'works', ->
       spyOn(atom.packages, 'enablePackage').andCallFake(->)
       spyOn(atom.packages, 'activatePackage').andCallFake(->)
@@ -46,7 +59,7 @@ describe 'Package-Deps', ->
         toInstall: ['linter', 'linter-ruby']
       })
 
-      # Main spies
+      # Main
       PackageDeps = require('../lib/main')
 
       waitsForPromise ->
