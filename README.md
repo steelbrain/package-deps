@@ -19,7 +19,7 @@ Because the package installation is async, it returns a promise that resolves wh
 ```coffee
 module.exports =
   activate: ->
-    # Note: This package tries to guess name of parent package by __dirname
+    # Note: atom-package-deps package tries to guess name of parent package by __dirname
     require('atom-package-deps').install()
       .then ->
         console.log("All deps are installed, it's good to go")
