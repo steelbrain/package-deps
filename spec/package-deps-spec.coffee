@@ -1,34 +1,21 @@
-jasmine.getEnv().defaultTimeoutInterval = 360 * 1000
 describe 'Package-Deps', ->
-  CP = require('child_process')
-  CP.execSync("#{atom.packages.getApmPath()} uninstall vim-mode pigments test-dependent-package")
-  CP.execSync("#{atom.packages.getApmPath()} install test-dependent-package")
-  atom.packages.activatePackage('test-dependent-package')
-  {Emitter} = require('event-kit')
+
   PackageDeps = require('../lib/main')
 
-  beforeEach ->
-    global.setTimeout = require('remote').getGlobal('setTimeout')
-    PackageDeps.debug?.dispose()
-    PackageDeps.debug = new Emitter
+  describe '::packagesToInstall', ->
+    it 'works', ->
+      spyOn(atom.packages, 'getLoadedPackage').andReturn({
+        metadata: {
+          'package-deps': ['linter', 'atom-hack']
+        }
+      })
+      atom.packages.resolvePackagePath.andCallFake((name) ->
+        if name is 'linter'
+          return 'some-random-stuff'
+        else
+          return null
+      )
+      retVal = PackageDeps.packagesToInstall('wow')
+      expect(retVal.toEnable).toEqual(['linter'])
+      expect(retVal.toInstall).toEqual(['atom-hack'])
 
-    waitsForPromise ->
-      atom.packages.activatePackage('notifications')
-
-  it 'installs dependencies', ->
-    waitsForPromise ->
-      packagesToInstall = null
-      packagesInstalled = 0
-      PackageDeps.debug.on('packagesToInstall', (packages)->
-        packagesToInstall = packages
-      )
-      PackageDeps.debug.on('installPackage', ->
-        packagesInstalled++
-      )
-      PackageDeps.install('test-dependent-package').then( ->
-        expect(packagesToInstall instanceof Array).toBe(true)
-        expect(packagesToInstall.length).toBe(packagesInstalled)
-        packagesToInstall.forEach((name) ->
-          expect(atom.packages.getActivePackage(name)).toBeDefined()
-        )
-      )
