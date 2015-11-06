@@ -19,8 +19,8 @@ Because the package installation is async, it returns a promise that resolves wh
 ```coffee
 module.exports =
   activate: ->
-    # Note: `linter-ruby` is the name of the current package
-    require('atom-package-deps').install('linter-ruby', true)
+    # Note: This package tries to guess name of parent package by __dirname
+    require('atom-package-deps').install()
       .then ->
         console.log("All deps are installed, it's good to go")
 ```
@@ -28,7 +28,7 @@ module.exports =
 #### API
 
 ```js
-function install(packageName, enablePackages = false)
+function install(packageName = null, enablePackages = false)
 ```
 
 #### License
