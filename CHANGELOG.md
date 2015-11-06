@@ -1,3 +1,8 @@
+### 3.0.0
+
+* Internal cleanup
+* Make name optional
+
 ### 2.1.3
 
 * Don't enable already installed packages by default
