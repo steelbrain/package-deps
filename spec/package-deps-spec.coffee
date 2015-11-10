@@ -33,6 +33,24 @@ describe 'Package-Deps', ->
       view.advance()
       expect(view.progress.value).toBe(2)
 
+    it 'works without notifications', ->
+      {View} = require('../lib/view')
+      view = new View('some-package', ['linter'])
+      view.show()
+      advanceClock(50)
+      expect(view.element).not.toBe(null)
+      expect(view.element.tagName).toBe('DIV')
+
+    it 'works with notifications', ->
+      {View} = require('../lib/view')
+      view = new View('some-package', ['linter'])
+
+      waitsForPromise ->
+        atom.packages.activatePackage('notifications').then ->
+          view.show()
+          advanceClock(50)
+          expect(view.element.tagName).not.toBe('div')
+
   describe 'install', ->
     it 'works', ->
       spyOn(atom.packages, 'enablePackage').andCallFake(->)
