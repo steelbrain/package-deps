@@ -1,3 +1,7 @@
+### 3.0.1
+
+* Workaround atom package activation race condition
+
 ### 3.0.0
 
 * Internal cleanup
