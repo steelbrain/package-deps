@@ -1,3 +1,7 @@
+### 3.0.2
+
+* A few fixes for windows compatibility
+
 ### 3.0.1
 
 * Workaround atom package activation race condition
