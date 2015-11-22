@@ -1,3 +1,7 @@
+### Upcoming
+
+* Use a more reliable way of guessing parent packages
+
 ### 3.0.2
 
 * A few fixes for windows compatibility
