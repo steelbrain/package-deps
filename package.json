@@ -23,6 +23,6 @@
     "event-kit": "^1.3.0"
   },
   "dependencies": {
-    "callsite": "^1.0.0"
+    "sb-callsite": "^1.0.0"
   }
 }
