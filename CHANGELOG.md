@@ -1,4 +1,4 @@
-### Upcoming
+### 3.0.3
 
 * Use a more reliable way of guessing parent packages
 
