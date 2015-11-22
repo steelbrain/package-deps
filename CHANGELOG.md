@@ -1,3 +1,7 @@
+### 3.0.4
+
+* Fix a scenario when error would be thrown if package name guessign fails
+
 ### 3.0.3
 
 * Use a more reliable way of guessing parent packages
