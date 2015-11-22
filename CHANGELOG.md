@@ -1,3 +1,7 @@
+### 3.0.5
+
+* Replace Linux-specific dependency `callsite` with cross-platform `sb-callsite`
+
 ### 3.0.4
 
 * Fix a scenario when error would be thrown if package name guessign fails
