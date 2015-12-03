@@ -1,4 +1,4 @@
-### Upcoming
+### 3.0.6
 
 * Supports guessing names of packages outside of main root
 
