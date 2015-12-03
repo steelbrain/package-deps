@@ -1,10 +1,14 @@
+### Upcoming
+
+* Supports guessing names of packages outside of main root
+
 ### 3.0.5
 
 * Replace Linux-specific dependency `callsite` with cross-platform `sb-callsite`
 
 ### 3.0.4
 
-* Fix a scenario when error would be thrown if package name guessign fails
+* Fix a scenario when error would be thrown if package name guessing fails
 
 ### 3.0.3
 
@@ -38,7 +42,7 @@
 
 ### 2.1.0
 
-* Introduced second parameter to install method 
+* Introduced second parameter to install method
 
 ### 2.0.x
 
