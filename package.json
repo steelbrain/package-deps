@@ -1,6 +1,6 @@
 {
   "name": "atom-package-deps",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "Automatically install package dependencies",
   "main": "lib/main",
   "scripts": {

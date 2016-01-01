@@ -1,3 +1,7 @@
+### 3.0.7
+
+* Simplify the regex used (reduce more than 50% regex steps)
+
 ### 3.0.6
 
 * Supports guessing names of packages outside of main root
