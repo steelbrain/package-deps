@@ -1,26 +1,41 @@
+# Project specific config
+matrix:
+  include:
+    - os: linux
+      language: node_js
+      node_js: "5"
+    - os: linux
+      language: node_js
+      node_js: "5"
+      env: ATOM_CHANNEL=beta
+    - os: osx
+      language: generic
+      before_install:
+        - brew update
+        - brew outdated node || brew upgrade node
+    - os: osx
+      language: generic
+      before_install:
+        - brew update
+        - brew outdated node || brew upgrade node
+      env: ATOM_CHANNEL=beta
+
+install:
+  - npm install
+  - npm run compile
+
+script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
+
+# Generic setup follows
 notifications:
   email:
     on_success: never
     on_failure: change
 
-script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
-
 git:
   depth: 10
 
 sudo: false
-
-os:
-  - linux
-  - osx
-
-env:
-  global:
-    - APM_TEST_PACKAGES=""
-
-  matrix:
-    - ATOM_CHANNEL=stable
-    - ATOM_CHANNEL=beta
 
 addons:
   apt:
