@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
-    "atom-package-path": "^1.0.0"
+    "atom-package-path": "^1.0.1"
   }
 }
