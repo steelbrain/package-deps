@@ -1,3 +1,7 @@
+### 3.0.6
+
+* Use `atom-package-path` to determine caller package name
+
 ### 3.0.7
 
 * Simplify the regex used (reduce more than 50% regex steps)

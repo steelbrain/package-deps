@@ -88,20 +88,3 @@ describe 'Package-Deps', ->
           expect(atom.packages.activatePackage.callCount).toBe(3)
           expect(view.show.callCount).toBe(1)
           expect(view.advance.callCount).toBe(2)
-
-  describe 'helpers', ->
-
-    describe 'guessName', ->
-      Helpers = require('../lib/helpers')
-
-      it 'works for packages in the correct place', ->
-        expect(Helpers.guessName('/home/steel/.atom/packages/linter/lib/main.js')).toBe('linter')
-        expect(Helpers.guessName('C:\\Users\\Steel Brain\\.atom\\packages\\linter\\lib\\main.js')).toBe('linter')
-
-      it 'works for packages that use the lib or src folder', ->
-        expect(Helpers.guessName('/home/steel/github/linter/lib/main.js')).toBe('linter')
-        expect(Helpers.guessName('C:\\Users\\Steel Brain\\github\\linter\\lib\\main.js')).toBe('linter')
-
-      it 'works for packages that have the main file in root folder', ->
-        expect(Helpers.guessName('/home/steel/github/linter/main.js')).toBe('linter')
-        expect(Helpers.guessName('C:\\Users\\Steel Brain\\github\\linter\\main.js')).toBe('linter')
