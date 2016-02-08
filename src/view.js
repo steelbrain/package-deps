@@ -1,4 +1,5 @@
-'use babel'
+'use strict'
+
 export class View {
   constructor(name, dependencies) {
     this.name = name

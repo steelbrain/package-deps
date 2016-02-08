@@ -1,4 +1,4 @@
-'use babel'
+'use strict'
 
 import {BufferedProcess} from 'atom'
 const extractionRegex = /Installing (.*?) to .* (.*)/
