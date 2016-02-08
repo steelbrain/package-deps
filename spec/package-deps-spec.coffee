@@ -88,13 +88,3 @@ describe 'Package-Deps', ->
           expect(atom.packages.activatePackage.callCount).toBe(3)
           expect(view.show.callCount).toBe(1)
           expect(view.advance.callCount).toBe(2)
-
-  describe 'helpers', ->
-
-    describe 'guessName', ->
-      Helpers = require('../lib/helpers')
-
-      it 'works for nix', ->
-        expect(Helpers.guessName('/home/steel/.atom/packages/linter/lib/main.js')).toBe('linter')
-      it 'works for windows', ->
-        expect(Helpers.guessName('C:\\Users\\Anees Iqbal\\.atom\\packages\\linter\\lib\\main.js')).toBe('linter')

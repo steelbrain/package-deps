@@ -2,13 +2,21 @@
 
 * Use `atom-package-path` to determine caller package name
 
+### 3.0.7
+
+* Simplify the regex used (reduce more than 50% regex steps)
+
+### 3.0.6
+
+* Supports guessing names of packages outside of main root
+
 ### 3.0.5
 
 * Replace Linux-specific dependency `callsite` with cross-platform `sb-callsite`
 
 ### 3.0.4
 
-* Fix a scenario when error would be thrown if package name guessign fails
+* Fix a scenario when error would be thrown if package name guessing fails
 
 ### 3.0.3
 
