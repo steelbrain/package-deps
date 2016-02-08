@@ -16,13 +16,17 @@ You need to have an array of package deps in your package manifest, like
 
 Because the package installation is async, it returns a promise that resolves when all the dependencies have been installed.
 
-```coffee
-module.exports =
-  activate: ->
-    # Note: atom-package-deps package tries to guess name of parent package by __dirname
+```js
+'use babel'
+
+module.exports = {
+  activate() {
     require('atom-package-deps').install()
-      .then ->
-        console.log("All deps are installed, it's good to go")
+      .then(function() {
+        console.log('All dependencies installed, good to go')
+      })
+  }
+}
 ```
 
 #### API
