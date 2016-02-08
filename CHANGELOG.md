@@ -1,3 +1,7 @@
+### 3.0.6
+
+* Use `atom-package-path` to determine caller package name
+
 ### 3.0.5
 
 * Replace Linux-specific dependency `callsite` with cross-platform `sb-callsite`
@@ -38,7 +42,7 @@
 
 ### 2.1.0
 
-* Introduced second parameter to install method 
+* Introduced second parameter to install method
 
 ### 2.0.x
 
