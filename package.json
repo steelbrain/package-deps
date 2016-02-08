@@ -4,7 +4,9 @@
   "description": "Automatically install package dependencies",
   "main": "lib/main",
   "scripts": {
-    "test": "apm test"
+    "test": "apm test",
+    "watch": "ucompiler watch",
+    "compile": "ucompiler go"
   },
   "repository": {
     "type": "git",
@@ -21,5 +23,11 @@
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
     "atom-package-path": "^1.0.2"
+  },
+  "devDependencies": {
+    "ucompiler": "^3.1.7",
+    "ucompiler-plugin-babel": "^3.1.1",
+    "ucompiler-plugin-newline": "^3.0.0",
+    "babel-preset-steelbrain": "^1.0.1"
   }
 }
