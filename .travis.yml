@@ -14,10 +14,14 @@ os:
   - linux
   - osx
 
-env:
-  global:
-    - APM_TEST_PACKAGES=""
+language: node_js
+node_js: "5"
 
+install:
+  - npm install
+  - npm run compile
+
+env:
   matrix:
     - ATOM_CHANNEL=stable
     - ATOM_CHANNEL=beta
