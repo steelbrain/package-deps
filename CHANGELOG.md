@@ -1,4 +1,4 @@
-### 3.0.6
+### 3.0.8
 
 * Use `atom-package-path` to determine caller package name
 
