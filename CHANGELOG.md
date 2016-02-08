@@ -1,61 +1,68 @@
-### 3.0.8
+# Changelog
 
-* Use `atom-package-path` to determine caller package name
+## 3.0.9
 
-### 3.0.7
+*   Bump `atom-package-path` minimum version
 
-* Simplify the regex used (reduce more than 50% regex steps)
+## 3.0.8
 
-### 3.0.6
+*   Use `atom-package-path` to determine caller package name
 
-* Supports guessing names of packages outside of main root
+## 3.0.7
 
-### 3.0.5
+*   Simplify the regex used (reduce more than 50% regex steps)
 
-* Replace Linux-specific dependency `callsite` with cross-platform `sb-callsite`
+## 3.0.6
 
-### 3.0.4
+*   Supports guessing names of packages outside of main root
 
-* Fix a scenario when error would be thrown if package name guessing fails
+## 3.0.5
 
-### 3.0.3
+*   Replace Linux-specific dependency `callsite` with cross-platform
+    `sb-callsite`
 
-* Use a more reliable way of guessing parent packages
+## 3.0.4
 
-### 3.0.2
+*   Fix a scenario when error would be thrown if package name guessing fails
 
-* A few fixes for windows compatibility
+## 3.0.3
 
-### 3.0.1
+*   Use a more reliable way of guessing parent packages
 
-* Workaround atom package activation race condition
+## 3.0.2
 
-### 3.0.0
+*   A few fixes for windows compatibility
 
-* Internal cleanup
-* Make name optional
+## 3.0.1
 
-### 2.1.3
+*   Workaround atom package activation race condition
 
-* Don't enable already installed packages by default
+## 3.0.0
 
-### 2.1.2
+*   Internal cleanup
+*   Make name optional
 
-* Fix progress bar for multiple dependencies
-* Invoke apm just one time even for multiple dependenciesx
+## 2.1.3
 
-### 2.1.1
+*   Don't enable already installed packages by default
 
-* Invoke apm with `--production`
+## 2.1.2
 
-### 2.1.0
+*   Fix progress bar for multiple dependencies
+*   Invoke apm just one time even for multiple dependenciesx
 
-* Introduced second parameter to install method
+## 2.1.1
 
-### 2.0.x
+*   Invoke apm with `--production`
 
-* Made some API breaking changes
+## 2.1.0
 
-### 1.x.x
+*   Introduced second parameter to install method
 
-* Basic API Introduced
+## 2.0.x
+
+*   Made some API breaking changes
+
+## 1.x.x
+
+*   Basic API Introduced
