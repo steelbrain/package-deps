@@ -12,9 +12,9 @@ export function installPackages(dependencies, progressCallback) {
       options: {},
       stdout: function(contents) {
         const matches = extractionRegex.exec(contents)
-        atom.packages.activatePackage(matches[1])
         if (matches[2] === '✓' || matches[2] === 'done') {
           progressCallback(matches[1], true)
+          atom.packages.activatePackage(matches[1])
         } else {
           progressCallback(matches[1], false)
           errors.push(contents)

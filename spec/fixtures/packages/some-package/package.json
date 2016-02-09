@@ -1,0 +1,4 @@
+{
+  "main": "index.js",
+  "package-deps": ["linter-php"]
+}

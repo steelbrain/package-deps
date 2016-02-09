@@ -1,5 +1,9 @@
-describe 'Package-Deps', ->
+{spawn} = require('child_process')
 
+uninstallPackage = (name) ->
+  spawn(atom.packages.getApmPath(), ['uninstall', '--hard', name])
+
+describe 'Package-Deps', ->
   window.__steelbrain_package_deps = new Set()
 
   describe 'packagesToInstall', ->
@@ -88,3 +92,21 @@ describe 'Package-Deps', ->
           expect(atom.packages.activatePackage.callCount).toBe(3)
           expect(view.show.callCount).toBe(1)
           expect(view.advance.callCount).toBe(2)
+  describe('Main module', ->
+    it('works properly', ->
+      _ = atom.packages.getLoadedPackage
+      spyOn(atom.packages, 'getLoadedPackage').andCallFake (name) ->
+        return _.call(this, name) unless name is 'some-package'
+        return {
+          metadata: {
+            'main': 'index.js',
+            'package-deps': ['linter-php']
+          }
+        }
+      expect(atom.packages.getActivePackage('linter-php')).toBeUndefined()
+      waitsForPromise {timeout: 60 * 1000}, ->
+        require('./fixtures/packages/some-package').activate().then ->
+          uninstallPackage('linter-php')
+          expect(atom.packages.getActivePackage('linter-php')).toBeDefined()
+    )
+  )
