@@ -21,13 +21,16 @@ Because the package installation is async, it returns a promise that resolves wh
 
 module.exports = {
   activate() {
-    require('atom-package-deps').install()
+    // replace the example argument 'linter-ruby' with the name of this linter package
+    require('atom-package-deps').install('linter-ruby')
       .then(function() {
         console.log('All dependencies installed, good to go')
       })
   }
 }
 ```
+
+While the package name argument of the `install()` function is optional it is recommended to pass it explicitly since otherwise the lookup of the package name inflicts an overhead of roughly a dozen milliseconds.
 
 #### API
 
