@@ -71,6 +71,8 @@ export function getDependencies(name) {
         }
       }
     }
+  } else {
+    console.error(`[Package-Deps] Unable to get package info for ${name}`)
   }
 
   return toReturn

@@ -6,17 +6,10 @@ import {it, wait} from './helpers'
 
 describe('Main Module', function() {
   function uninstallPackage(name) {
-    waitsForPromise(function() {
-      return atom.packages.uninstallDirectory(
-        Path.join(atom.packages.getPackageDirPaths().pop(), name)
-      )
-    })
+    return atom.packages.uninstallDirectory(
+      Path.join(atom.packages.getPackageDirPaths().pop(), name)
+    )
   }
-
-  afterEach(function() {
-    uninstallPackage('auto-semicolon')
-    uninstallPackage('glow')
-  })
 
   it('works as a whole', async function() {
     const _ = atom.packages.getLoadedPackage
@@ -35,6 +28,7 @@ describe('Main Module', function() {
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
     await require('./fixtures/packages/some-package').activate()
     expect(atom.packages.getActivePackage(packageName)).toBeDefined()
+    await uninstallPackage(packageName)
 
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(1)
@@ -64,7 +58,7 @@ describe('Main Module', function() {
 
   it('can install multiple packages at once', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageNameFirst = 'auto-semicolon'
+    const packageNameFirst = 'atom-idle-autosave'
     const packageNameSecond = 'glow'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
@@ -83,6 +77,8 @@ describe('Main Module', function() {
     await require('./fixtures/packages/some-package').activate()
     expect(atom.packages.getActivePackage(packageNameFirst)).toBeDefined()
     expect(atom.packages.getActivePackage(packageNameSecond)).toBeDefined()
+    await uninstallPackage(packageNameFirst)
+    await uninstallPackage(packageNameSecond)
 
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(1)
@@ -92,7 +88,7 @@ describe('Main Module', function() {
 
   it('works with hardcoded package names', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageName = 'auto-semicolon'
+    const packageName = 'atom-bracket-highlight'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
         return {
@@ -107,9 +103,16 @@ describe('Main Module', function() {
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
     await require('./fixtures/packages/some-package/index-hardcoded-name').activate()
     expect(atom.packages.getActivePackage(packageName)).toBeDefined()
+    await uninstallPackage(packageName)
 
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(1)
     expect(notifications[0].type).toBe('info')
+  })
+
+  it('stays silent when that package name is not found in active packages', async function() {
+    await require('./fixtures/packages/some-package/index-hardcoded-name').activate()
+    const notifications = atom.notifications.getNotifications()
+    expect(notifications.length).toBe(0)
   })
 })

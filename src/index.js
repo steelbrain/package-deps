@@ -11,7 +11,7 @@ export async function install(name = null) {
     name = require('atom-package-path').guessFromCallIndex(5)
   }
   if (!name) {
-    console.log(`Unable to get package name for file: ${filePath}`)
+    console.error(`[Package-Deps] Unable to get package name for file: ${filePath}`)
     return
   }
 
