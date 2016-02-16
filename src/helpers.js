@@ -13,10 +13,10 @@ export function spawnAPM(dependencies, progressCallback) {
       options: {},
       stdout: function(contents) {
         const matches = extractionRegex.exec(contents)
-        progressCallback()
         if (matches[2] === '✓' || matches[2] === 'done') {
-          // Succeeded
+          progressCallback(matches[1], true)
         } else {
+          progressCallback(matches[1], false)
           errors.push(matches[1])
         }
       },
@@ -37,19 +37,23 @@ export function spawnAPM(dependencies, progressCallback) {
 
 export async function installDependencies(name, packages) {
   const view = new View(name, packages)
+  const installedPackages = []
   try {
-    await spawnAPM(packages, function() {
+    await spawnAPM(packages, function(name, status) {
       view.advance()
+      if (status) {
+        installedPackages.push(name)
+      }
     })
     view.markFinished()
   } catch (error) {
     view.dismiss()
-    atom.notifications.addError(`Error installing ${this.name} dependencies`, {
+    atom.notifications.addError(`Error installing ${name} dependencies`, {
       detail: error.stack,
       dismissable: true
     })
   } finally {
-    await Promise.all(packages.map(name => atom.packages.activatePackage(name)))
+    await Promise.all(installedPackages.map(name => atom.packages.activatePackage(name)))
   }
 }
 
