@@ -1,9 +1,10 @@
 'use strict'
 
 import {BufferedProcess} from 'atom'
+import {View} from './view'
 const extractionRegex = /Installing (.*?) to .* (.*)/
 
-export function installPackages(dependencies, progressCallback) {
+export function spawnAPM(dependencies, progressCallback) {
   return new Promise(function(resolve, reject) {
     const errors = []
     new BufferedProcess({
@@ -14,19 +15,19 @@ export function installPackages(dependencies, progressCallback) {
         const matches = extractionRegex.exec(contents)
         if (matches[2] === '✓' || matches[2] === 'done') {
           progressCallback(matches[1], true)
-          atom.packages.activatePackage(matches[1])
         } else {
           progressCallback(matches[1], false)
-          errors.push(contents)
+          errors.push(matches[1])
         }
       },
       stderr: function(contents) {
-        errors.push(contents)
+        const lastIndex = errors.length - 1
+        errors[lastIndex] += ': ' + contents
       },
       exit: function() {
         if (errors.length) {
           const error = new Error('Error installing dependencies')
-          error.stack = errors.join('')
+          error.stack = errors.join('\n')
           reject(error)
         } else resolve()
       }
@@ -34,21 +35,45 @@ export function installPackages(dependencies, progressCallback) {
   })
 }
 
-export function packagesToInstall(name) {
-  let packageInfo = atom.packages.getLoadedPackage(name)
-
-  const toInstall = [], toEnable = [];
-  (packageInfo ? (packageInfo.metadata['package-deps'] ? packageInfo.metadata['package-deps'] : []) : [])
-    .forEach(function(name) {
-      if (!window.__steelbrain_package_deps.has(name)) {
-        window.__steelbrain_package_deps.add(name)
-        if (atom.packages.resolvePackagePath(name)) {
-          toEnable.push(name)
-        } else {
-          toInstall.push(name)
-        }
+export async function installDependencies(name, packages) {
+  const view = new View(name, packages)
+  const installedPackages = []
+  try {
+    await spawnAPM(packages, function(name, status) {
+      view.advance()
+      if (status) {
+        installedPackages.push(name)
       }
     })
+    view.markFinished()
+  } catch (error) {
+    view.dismiss()
+    atom.notifications.addError(`Error installing ${name} dependencies`, {
+      detail: error.stack,
+      dismissable: true
+    })
+  } finally {
+    await Promise.all(installedPackages.map(name => atom.packages.activatePackage(name)))
+  }
+}
 
-  return {toInstall, toEnable}
+export function getDependencies(name) {
+  const toReturn = []
+  const packageModule = atom.packages.getLoadedPackage(name)
+  const packageDependencies = packageModule && packageModule.metadata['package-deps']
+
+  if (packageDependencies) {
+    for (const name of packageDependencies) {
+      if (!__steelbrain_package_deps.has(name)) {
+        __steelbrain_package_deps.add(name)
+        if (!atom.packages.resolvePackagePath(name)) {
+          toReturn.push(name)
+        }
+      }
+    }
+  } else {
+    console.error(`[Package-Deps] Unable to get package info for ${name}`)
+  }
+
+  return toReturn
 }

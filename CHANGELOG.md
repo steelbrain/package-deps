@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.0
+
+*   Remove second parameter to `.install` (API breaking)
+*   Show a nice error notification when installation fails
+*   Make progress bar implementation more robust
+
 ## 3.0.9
 
 *   Bump `atom-package-path` minimum version
