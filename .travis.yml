@@ -8,17 +8,6 @@ matrix:
       language: node_js
       node_js: "5"
       env: ATOM_CHANNEL=beta
-    - os: osx
-      language: generic
-      before_install:
-        - brew update
-        - brew outdated node || brew upgrade node
-    - os: osx
-      language: generic
-      before_install:
-        - brew update
-        - brew outdated node || brew upgrade node
-      env: ATOM_CHANNEL=beta
 
 install:
   - npm install
