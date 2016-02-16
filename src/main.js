@@ -14,6 +14,7 @@ export class Installer {
       await spawnAPM(this.packages, function() {
         view.advance()
       })
+      view.markFinished()
     } catch (error) {
       view.dismiss()
       atom.notifications.addError(`Error installing ${this.name} dependencies`, {
