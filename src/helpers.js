@@ -1,6 +1,7 @@
 'use strict'
 
 import {BufferedProcess} from 'atom'
+import {View} from './view'
 const extractionRegex = /Installing (.*?) to .* (.*)/
 
 export function spawnAPM(dependencies, progressCallback) {
@@ -32,6 +33,24 @@ export function spawnAPM(dependencies, progressCallback) {
       }
     })
   })
+}
+
+export async function installDependencies(name, packages) {
+  const view = new View(name, packages)
+  try {
+    await spawnAPM(packages, function() {
+      view.advance()
+    })
+    view.markFinished()
+  } catch (error) {
+    view.dismiss()
+    atom.notifications.addError(`Error installing ${this.name} dependencies`, {
+      detail: error.stack,
+      dismissable: true
+    })
+  } finally {
+    await Promise.all(packages.map(name => atom.packages.activatePackage(name)))
+  }
 }
 
 export function getDependencies(name) {

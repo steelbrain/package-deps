@@ -1,7 +1,7 @@
 'use strict'
 
 import {Installer} from './main'
-import {getDependencies} from './helpers'
+import {getDependencies, installDependencies} from './helpers'
 
 if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
@@ -19,6 +19,6 @@ export async function install(name = null) {
   const dependencies = getDependencies(name)
   if (dependencies.length) {
     await atom.packages.activatePackage('notifications')
-    await new Installer(name, dependencies).install()
+    await installDependencies(name, dependencies)
   }
 }
