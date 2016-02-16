@@ -21,7 +21,7 @@ export class View {
   }
   advance() {
     this.completed++
-    if (this.completed > 1) {
+    if (this.completed) {
       this.progress.value = this.completed
     }
   }
