@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1
+
+*   Remove outdated API from README
+
 ## 4.0.0
 
 *   Remove second parameter to `.install` (API breaking)
