@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0
+
+*   Remove second parameter to `.install`
+*   Show a nice error notification when installation fails
+
 ## 3.0.9
 
 *   Bump `atom-package-path` minimum version
