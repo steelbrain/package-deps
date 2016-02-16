@@ -3,7 +3,7 @@
 import {BufferedProcess} from 'atom'
 const extractionRegex = /Installing (.*?) to .* (.*)/
 
-export function installPackages(dependencies, progressCallback) {
+export function spawnAPM(dependencies, progressCallback) {
   return new Promise(function(resolve, reject) {
     const errors = []
     new BufferedProcess({
@@ -12,21 +12,21 @@ export function installPackages(dependencies, progressCallback) {
       options: {},
       stdout: function(contents) {
         const matches = extractionRegex.exec(contents)
+        progressCallback()
         if (matches[2] === '✓' || matches[2] === 'done') {
-          progressCallback(matches[1], true)
-          atom.packages.activatePackage(matches[1])
+          // Succeeded
         } else {
-          progressCallback(matches[1], false)
-          errors.push(contents)
+          errors.push(matches[1])
         }
       },
       stderr: function(contents) {
-        errors.push(contents)
+        const lastIndex = errors.length - 1
+        errors[lastIndex] += ': ' + contents
       },
       exit: function() {
         if (errors.length) {
           const error = new Error('Error installing dependencies')
-          error.stack = errors.join('')
+          error.stack = errors.join('\n')
           reject(error)
         } else resolve()
       }
