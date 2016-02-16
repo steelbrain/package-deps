@@ -19,6 +19,6 @@ export async function install(name = null) {
   const dependencies = getDependencies(name)
   if (dependencies.length) {
     await atom.packages.activatePackage('notifications')
-    await new Installer(dependencies).install()
+    await new Installer(name, dependencies).install()
   }
 }
