@@ -1,44 +1,24 @@
 'use strict'
 
-const FS = require('fs')
-const Path = require('path')
-const {View} = require('./view')
-import {guessName, installPackages, packagesToInstall} from './helpers'
+import {installPackages, getDependencies} from './helpers'
 
-// Renamed for backward compatibility
 if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
 }
 
-export function install(name = null, enablePackages = false) {
+export async function install(name = null) {
   if (!name) {
-    name = require('atom-package-path').guess()
+    // 5 is the callsite index when called due to this function being a generator
+    name = require('atom-package-path').guessFromCallIndex(5)
   }
   if (!name) {
     console.log(`Unable to get package name for file: ${filePath}`)
-    return Promise.resolve()
-  }
-  const {toInstall, toEnable} = packagesToInstall(name)
-  let promise = Promise.resolve()
-
-  if (enablePackages && toEnable.length) {
-    promise = toEnable.reduce(function(promise, name) {
-      atom.packages.enablePackage(name)
-      return atom.packages.activatePackage(name)
-    }, promise)
-  }
-  if (toInstall.length) {
-    const view = new View(name, toInstall)
-    promise = Promise.all([view.show(), promise]).then(function() {
-      return installPackages(toInstall, function(name, status) {
-        if (status) {
-          view.advance()
-        } else {
-          atom.notifications.addError(`Error Installing ${name}`, {detail: 'Something went wrong. Try installing this package manually.'})
-        }
-      })
-    })
+    return
   }
 
-  return promise
+  const dependencies = getDependencies(name)
+  if (dependencies.length) {
+    await atom.packages.activatePackage('notifications')
+    console.log('packages to install', dependencies)
+  }
 }
