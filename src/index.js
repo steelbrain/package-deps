@@ -1,6 +1,5 @@
 'use strict'
 
-import {Installer} from './main'
 import {getDependencies, installDependencies} from './helpers'
 
 if (typeof window.__steelbrain_package_deps === 'undefined') {
