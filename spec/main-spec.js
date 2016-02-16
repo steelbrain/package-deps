@@ -89,4 +89,27 @@ describe('Main Module', function() {
     expect(notifications[0].type).toBe('info')
     expect(Helpers.installDependencies.mostRecentCall.args[1]).toEqual([packageNameFirst, packageNameSecond])
   })
+
+  it('works with hardcoded package names', async function() {
+    const _ = atom.packages.getLoadedPackage
+    const packageName = 'auto-semicolon'
+    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
+      if (name === 'some-package') {
+        return {
+          metadata: {
+            'main': 'index.js',
+            'package-deps': [packageName]
+          }
+        }
+      } else return _.call(this, name)
+    })
+
+    expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
+    await require('./fixtures/packages/some-package/index-hardcoded-name').activate()
+    expect(atom.packages.getActivePackage(packageName)).toBeDefined()
+
+    const notifications = atom.notifications.getNotifications()
+    expect(notifications.length).toBe(1)
+    expect(notifications[0].type).toBe('info')
+  })
 })
