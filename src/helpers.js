@@ -34,21 +34,21 @@ export function installPackages(dependencies, progressCallback) {
   })
 }
 
-export function packagesToInstall(name) {
-  let packageInfo = atom.packages.getLoadedPackage(name)
+export function dependenciesToInstall(name) {
+  const toReturn = []
+  const packageModule = atom.packages.getLoadedPackage(name)
+  const packageDependencies = packageModule && packageModule.metadata['package-deps']
 
-  const toInstall = [], toEnable = [];
-  (packageInfo ? (packageInfo.metadata['package-deps'] ? packageInfo.metadata['package-deps'] : []) : [])
-    .forEach(function(name) {
-      if (!window.__steelbrain_package_deps.has(name)) {
-        window.__steelbrain_package_deps.add(name)
-        if (atom.packages.resolvePackagePath(name)) {
-          toEnable.push(name)
-        } else {
-          toInstall.push(name)
+  if (packageDependencies) {
+    for (const name of packageDependencies) {
+      if (!__steelbrain_package_deps.has(name)) {
+        __steelbrain_package_deps.add(name)
+        if (!atom.packages.resolvePackagePath(name)) {
+          toReturn.push(name)
         }
       }
-    })
+    }
+  }
 
-  return {toInstall, toEnable}
+  return toReturn
 }
