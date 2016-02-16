@@ -35,7 +35,7 @@ While the package name argument of the `install()` function is optional it is re
 #### API
 
 ```js
-function install(packageName = null, enablePackages = false)
+function install(packageName = null)
 ```
 
 #### License
