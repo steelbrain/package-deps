@@ -34,7 +34,7 @@ export function installPackages(dependencies, progressCallback) {
   })
 }
 
-export function dependenciesToInstall(name) {
+export function getDependencies(name) {
   const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(name)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
