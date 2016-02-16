@@ -2,7 +2,7 @@
   "name": "atom-package-deps",
   "version": "3.0.9",
   "description": "Automatically install package dependencies",
-  "main": "lib/main",
+  "main": "lib/index.js",
   "scripts": {
     "test": "apm test",
     "watch": "ucompiler watch",
