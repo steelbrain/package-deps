@@ -4,7 +4,7 @@
     "name": "compile-src",
     "plugins": ["babel", "newline"],
     "babel": {
-      "presets": ["steelbrain", "steelbrain-async"]
+      "presets": ["steelbrain"]
     },
     "include": [{
       "directory": "src",
