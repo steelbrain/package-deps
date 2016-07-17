@@ -28,6 +28,6 @@
     "ucompiler": "^3.1.7",
     "ucompiler-plugin-babel": "^3.1.1",
     "ucompiler-plugin-newline": "^3.0.0",
-    "babel-preset-steelbrain": "^2.0.0"
+    "babel-preset-steelbrain": "^4.0.1"
   }
 }
