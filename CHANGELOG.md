@@ -6,6 +6,7 @@
 *   Better track success of package installs
 *   Handle info message from apm during installs
 *   Handle packages installed from repositories
+*   Allow parallel installation of packages
 
 ## 4.0.1
 
