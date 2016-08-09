@@ -8,7 +8,7 @@ export function spawnAPM(dependencies, progressCallback) {
   return Promise.all(dependencies.map(function(dependency) {
     return new Promise(function(resolve, reject) {
       const errors = []
-      let successes = 0
+      let success = false
       new BufferedProcess({
         command: atom.packages.getApmPath(),
         args: ['install'].concat([dependency, '--production', '--color', 'false']),
@@ -19,7 +19,7 @@ export function spawnAPM(dependencies, progressCallback) {
             // info messages: ignore
           } else if (matches[2] === '✓' || matches[2] === 'done') {
             progressCallback(matches[1], true)
-            successes++
+            success = true
           } else {
             progressCallback(matches[1], false)
             errors.push(matches[1])
@@ -29,7 +29,7 @@ export function spawnAPM(dependencies, progressCallback) {
           errors.push(contents)
         },
         exit: function() {
-          if (successes !== dependencies.length) {
+          if (!success) {
             const error = new Error('Error installing dependency: ' + dependency)
             error.stack = errors.join('\n')
             reject(error)
