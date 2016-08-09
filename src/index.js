@@ -1,7 +1,7 @@
 /* @flow */
 
 import invariant from 'assert'
-import AtomPackagePath from 'atom-package-path'
+import * as AtomPackagePath from 'atom-package-path'
 
 import * as Helpers from './helpers'
 import View from './view'

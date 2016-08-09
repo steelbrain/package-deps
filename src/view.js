@@ -1,7 +1,5 @@
 /* @flow */
 
-import { Disposable } from 'atom'
-
 export default class View {
   name: string;
   advance: (() => void);
@@ -17,9 +15,9 @@ export default class View {
       dismissable: true,
     })
     const progress = document.createElement('progress')
-    this.dispose = new Disposable(function() {
+    this.dispose = function() {
       notification.dismiss()
-    })
+    }
     this.advance = function() {
       progress.value++
     }
@@ -44,10 +42,10 @@ export default class View {
     const packages = []
     for (const [packageName, error] of errors) {
       packages.push(`  • ${packageName}`)
-      console.error('[Package-Deps] Unable to install', packageName, 'Due to error', error)
+      console.error('[Package-Deps] Unable to install', packageName, ', Error:', ((error && error.stack) || error))
     }
     atom.notifications.addWarning(`Failed to install ${this.name} dependencies`, {
-      detail: `These packages were not installed, check your console for more info\n${packages.join('\n')}`,
+      detail: `These packages were not installed, check your console\nfor more info.\n${packages.join('\n')}`,
       dismissable: true,
     })
   }

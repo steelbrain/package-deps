@@ -2,7 +2,8 @@
 
 import { exec } from 'sb-exec'
 
-const VALIDATION_REGEXP = /(?:Installing|Moving) .*? to .+/
+const VALID_TICKS = new Set(['✓', 'done'])
+const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
 export function apmInstall(dependencies: Array<string>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
   const errors = new Map()
@@ -11,7 +12,7 @@ export function apmInstall(dependencies: Array<string>, progressCallback: ((pack
       stream: 'both',
       ignoreExitCode: true,
     }).then(function(output) {
-      const successful = VALIDATION_REGEXP.test(output.stdout)
+      const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
       progressCallback(dependency, successful)
       if (!successful) {
         const error = new Error(`Error installing dependency: ${dependency}`)
