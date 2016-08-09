@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.2
+
+*   Stop hiding the first error message in some cases
+*   Better track success of package installs
+*   Handle info message from apm during installs
+*   Handle packages installed from repositories
+*   Allow parallel installation of packages
+
 ## 4.0.1
 
 *   Remove outdated API from README
