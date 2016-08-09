@@ -9,6 +9,8 @@
 *   Stop hiding the first error message in some cases
 *   Support importing this module in babel with `import x from 'y'` instead of `import * as x from 'y'`
 
+Thanks to @joelbarker2011 for helping out with his PRs!
+
 ## 4.0.1
 
 *   Remove outdated API from README
