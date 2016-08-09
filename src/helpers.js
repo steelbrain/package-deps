@@ -21,8 +21,7 @@ export function spawnAPM(dependencies, progressCallback) {
         }
       },
       stderr: function(contents) {
-        const lastIndex = errors.length - 1
-        errors[lastIndex] += ': ' + contents
+        errors.push(contents)
       },
       exit: function() {
         if (errors.length) {
