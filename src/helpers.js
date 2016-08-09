@@ -2,7 +2,7 @@
 
 import {BufferedProcess} from 'atom'
 import {View} from './view'
-const extractionRegex = /Installing (.*?) to .* (.*)/
+const extractionRegex = /(?:Installing|Moving) (.*?) to .* (.*)/
 
 export function spawnAPM(dependencies, progressCallback) {
   return new Promise(function(resolve, reject) {
