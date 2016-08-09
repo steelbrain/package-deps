@@ -20,9 +20,18 @@ async function install(givenPackageName: ?string) {
   }
   await Helpers.enablePackage('notifications')
   const view = new View(packageName, dependencies)
-  view.complete(await Helpers.apmInstall(dependencies, function() {
+  const errors = await Helpers.apmInstall(dependencies, function() {
     view.advance()
-  }))
+  })
+  const promises = []
+  view.complete(errors)
+  for (const dependency of (dependencies: Array<string>)) {
+    if (errors.has(dependency)) {
+      continue
+    }
+    promises.push(atom.packages.activatePackage(dependency))
+  }
+  await Promise.all(promises)
 }
 
 module.exports.install = install
