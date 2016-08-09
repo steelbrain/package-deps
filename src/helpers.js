@@ -1,83 +1,59 @@
-'use strict'
+/* @flow */
 
-import {BufferedProcess} from 'atom'
-import {View} from './view'
-const extractionRegex = /(?:Installing|Moving) (.*?) to .* (.*)/
+import { exec } from 'sb-exec'
 
-export function spawnAPM(dependencies, progressCallback) {
+const VALID_TICKS = new Set(['✓', 'done'])
+const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
+
+export function apmInstall(dependencies: Array<string>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
+  const errors = new Map()
   return Promise.all(dependencies.map(function(dependency) {
-    return new Promise(function(resolve, reject) {
-      const errors = []
-      let success = false
-      new BufferedProcess({
-        command: atom.packages.getApmPath(),
-        args: ['install'].concat([dependency, '--production', '--color', 'false']),
-        options: {},
-        stdout: function(contents) {
-          const matches = extractionRegex.exec(contents)
-          if (!matches) {
-            // info messages: ignore
-          } else if (matches[2] === '✓' || matches[2] === 'done') {
-            progressCallback(matches[1], true)
-            success = true
-          } else {
-            progressCallback(matches[1], false)
-            errors.push(matches[1])
-          }
-        },
-        stderr: function(contents) {
-          errors.push(contents)
-        },
-        exit: function() {
-          if (!success) {
-            const error = new Error('Error installing dependency: ' + dependency)
-            error.stack = errors.join('\n')
-            reject(error)
-          } else resolve()
-        }
-      })
+    return exec(atom.packages.getApmPath(), ['install', dependency, '--production', '--color', 'false'], {
+      stream: 'both',
+      ignoreExitCode: true,
+    }).then(function(output) {
+      const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
+      progressCallback(dependency, successful)
+      if (!successful) {
+        const error = new Error(`Error installing dependency: ${dependency}`)
+        error.stack = output.stderr
+        throw error
+      }
+    }).catch(function(error) {
+      errors.set(dependency, error)
     })
-  }))
+  })).then(function() {
+    return errors
+  })
 }
 
-export async function installDependencies(name, packages) {
-  const view = new View(name, packages)
-  const installedPackages = []
-  try {
-    await spawnAPM(packages, function(name, status) {
-      view.advance()
-      if (status) {
-        installedPackages.push(name)
-      }
-    })
-    view.markFinished()
-  } catch (error) {
-    view.dismiss()
-    atom.notifications.addError(`Error installing ${name} dependencies`, {
-      detail: error.stack,
-      dismissable: true
-    })
-  } finally {
-    await Promise.all(installedPackages.map(name => atom.packages.activatePackage(name)))
+export async function enablePackage(packageName: string): Promise<void> {
+  if (atom.packages.isPackageDisabled(packageName)) {
+    atom.packages.enablePackage(packageName)
+  }
+  if (!atom.packages.isPackageLoaded(packageName)) {
+    atom.packages.loadPackage(packageName)
+  }
+  if (!atom.packages.isPackageActive(packageName)) {
+    await atom.packages.activatePackage(packageName)
   }
 }
 
-export function getDependencies(name) {
+export function getDependencies(packageName: string): Array<string> {
   const toReturn = []
-  const packageModule = atom.packages.getLoadedPackage(name)
+  const packageModule = atom.packages.getLoadedPackage(packageName)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
 
   if (packageDependencies) {
-    for (const name of packageDependencies) {
-      if (!__steelbrain_package_deps.has(name)) {
-        __steelbrain_package_deps.add(name)
-        if (!atom.packages.resolvePackagePath(name)) {
-          toReturn.push(name)
-        }
+    for (const entry of (packageDependencies: Array<string>)) {
+      if (__steelbrain_package_deps.has(entry) || atom.packages.resolvePackagePath(entry)) {
+        continue
       }
+      __steelbrain_package_deps.add(entry)
+      toReturn.push(entry)
     }
   } else {
-    console.error(`[Package-Deps] Unable to get package info for ${name}`)
+    console.error(`[Package-Deps] Unable to get loaded package '${packageName}'`)
   }
 
   return toReturn

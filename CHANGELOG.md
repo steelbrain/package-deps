@@ -1,12 +1,15 @@
 # Changelog
 
-## 4.0.2
+## 4.1.0
 
-*   Stop hiding the first error message in some cases
-*   Better track success of package installs
-*   Handle info message from apm during installs
-*   Handle packages installed from repositories
 *   Allow parallel installation of packages
+*   Better track success of package installs
+*   Handle packages installed from repositories
+*   Handle info message from apm during installs
+*   Stop hiding the first error message in some cases
+*   Support importing this module in babel with `import x from 'y'` instead of `import * as x from 'y'`
+
+Thanks to @joelbarker2011 for helping out with his PRs!
 
 ## 4.0.1
 

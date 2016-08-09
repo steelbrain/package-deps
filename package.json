@@ -1,12 +1,14 @@
 {
   "name": "atom-package-deps",
-  "version": "4.0.2",
+  "version": "4.0.1",
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
   "scripts": {
     "test": "apm test",
-    "watch": "ucompiler watch",
-    "compile": "ucompiler go"
+    "lint": "eslint .",
+    "clean": "rm -rf lib",
+    "compile": "npm run clean && babel src --out-dir lib",
+    "watch": "npm run clean && babel src --out-dir lib --watch"
   },
   "repository": {
     "type": "git",
@@ -22,12 +24,14 @@
   },
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
-    "atom-package-path": "^1.1.0"
+    "atom-package-path": "^1.1.0",
+    "sb-exec": "^2.0.5"
   },
   "devDependencies": {
-    "ucompiler": "^3.1.7",
-    "ucompiler-plugin-babel": "^3.1.1",
-    "ucompiler-plugin-newline": "^3.0.0",
-    "babel-preset-steelbrain": "^4.0.1"
+    "babel-cli": "^6.10.1",
+    "babel-plugin-for-of-efficient": "^1.0.0",
+    "babel-preset-steelbrain": "^4.0.1",
+    "eslint-config-steelbrain": "^1.0.4",
+    "jasmine-fix": "^1.0.1"
   }
 }
