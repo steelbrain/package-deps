@@ -14,7 +14,9 @@ export function spawnAPM(dependencies, progressCallback) {
       options: {},
       stdout: function(contents) {
         const matches = extractionRegex.exec(contents)
-        if (matches[2] === '✓' || matches[2] === 'done') {
+        if (!matches) {
+          // info messages: ignore
+        } else if (matches[2] === '✓' || matches[2] === 'done') {
           progressCallback(matches[1], true)
           successes++
         } else {
