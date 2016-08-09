@@ -7,14 +7,18 @@ const extractionRegex = /Installing (.*?) to .* (.*)/
 export function spawnAPM(dependencies, progressCallback) {
   return new Promise(function(resolve, reject) {
     const errors = []
+    let successes = 0
     new BufferedProcess({
       command: atom.packages.getApmPath(),
       args: ['install'].concat(dependencies).concat(['--production', '--color', 'false']),
       options: {},
       stdout: function(contents) {
         const matches = extractionRegex.exec(contents)
-        if (matches[2] === '✓' || matches[2] === 'done') {
+        if (!matches) {
+          // info messages: ignore
+        } else if (matches[2] === '✓' || matches[2] === 'done') {
           progressCallback(matches[1], true)
+          successes++
         } else {
           progressCallback(matches[1], false)
           errors.push(matches[1])
@@ -24,7 +28,7 @@ export function spawnAPM(dependencies, progressCallback) {
         errors.push(contents)
       },
       exit: function() {
-        if (errors.length) {
+        if (successes !== dependencies.length) {
           const error = new Error('Error installing dependencies')
           error.stack = errors.join('\n')
           reject(error)
