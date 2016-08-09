@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
-    "atom-package-path": "^1.1.0"
+    "atom-package-path": "^1.1.0",
+    "sb-exec": "^2.0.5"
   },
   "devDependencies": {
     "eslint-config-steelbrain": "^1.0.4",

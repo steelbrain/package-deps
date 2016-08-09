@@ -1,47 +1,54 @@
-'use strict'
+/* @flow */
 
-export class View {
-  constructor(name, dependencies) {
+import { Disposable } from 'atom'
+
+export default class View {
+  name: string;
+  advance: (() => void);
+  dispose: (() => void);
+  dependencies: Array<string>;
+
+  constructor(name: string, dependencies: Array<string>) {
     this.name = name
-    this.progress = document.createElement('progress')
-    this.completed = 0
     this.dependencies = dependencies
-    this.notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
+
+    const notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
       detail: `Installing ${dependencies.join(', ')}`,
-      dismissable: true
+      dismissable: true,
     })
-    this.notificationView = atom.views.getView(this.notification)
-
-    const content = this.notificationView.querySelector('.detail-content')
-    if (content) {
-      content.appendChild(this.progress)
+    const progress = document.createElement('progress')
+    this.dispose = new Disposable(function() {
+      notification.dismiss()
+    })
+    this.advance = function() {
+      progress.value++
     }
-    this.progress.max = dependencies.length
-    this.progress.style.width = '100%'
+    progress.max = dependencies.length
+    progress.style.width = '100%'
+    try {
+      const notificationView = atom.views.getView(notification)
+      const notificationContent = notificationView.querySelector('.detail-content')
+      if (notificationContent) {
+        notificationContent.appendChild(progress)
+      }
+    } catch (_) { /* Notifications package is disabled */ }
   }
-  advance() {
-    this.completed++
-    if (this.completed) {
-      this.progress.value = this.completed
+  complete(errors: Map<string, Error>): void {
+    this.dispose()
+    if (!errors.size) {
+      atom.notifications.addSuccess(`Installed ${this.name} dependencies`, {
+        detail: `Installed ${this.dependencies.join(', ')}`,
+      })
+      return
     }
-  }
-  markFinished() {
-    const content = this.notificationView.querySelector('.detail-content')
-    const title = this.notificationView.querySelector('.message p')
-
-    if (content) {
-      content.textContent = `Installed ${this.dependencies.join(', ')}`
+    const packages = []
+    for (const [packageName, error] of errors) {
+      packages.push(`  • ${packageName}`)
+      console.error('[Package-Deps] Unable to install', packageName, 'Due to error', error)
     }
-    if (title) {
-      title.textContent = `Installed ${this.name} dependencies`
-    }
-
-    this.notificationView.classList.remove('info')
-    this.notificationView.classList.remove('icon-info')
-    this.notificationView.classList.add('success')
-    this.notificationView.classList.add('icon-check')
-  }
-  dismiss() {
-    this.notification.dismiss()
+    atom.notifications.addWarning(`Failed to install ${this.name} dependencies`, {
+      detail: `These packages were not installed, check your console for more info\n${packages.join('\n')}`,
+      dismissable: true,
+    })
   }
 }
