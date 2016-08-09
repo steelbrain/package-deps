@@ -1,8 +1,9 @@
-'use babel'
+/* @flow */
+/* eslint-disable global-require */
 
 import Path from 'path'
-import * as Helpers from '../lib/helpers'
-import {it, wait} from './helpers'
+import { wait } from 'jasmine-fix'
+import { it } from './helpers'
 
 describe('Main Module', function() {
   function uninstallPackage(name) {
@@ -18,11 +19,12 @@ describe('Main Module', function() {
       if (name === 'some-package') {
         return {
           metadata: {
-            'main': 'index.js',
-            'package-deps': [packageName]
-          }
+            main: 'index.js',
+            'package-deps': [packageName],
+          },
         }
-      } else return _.call(this, name)
+      }
+      return _.call(this, name)
     })
 
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
@@ -31,7 +33,7 @@ describe('Main Module', function() {
     await uninstallPackage(packageName)
 
     const notifications = atom.notifications.getNotifications()
-    expect(notifications.length).toBe(1)
+    expect(notifications.length).toBe(2)
     expect(notifications[0].type).toBe('info')
   })
 
@@ -41,11 +43,12 @@ describe('Main Module', function() {
       if (name === 'some-package') {
         return {
           metadata: {
-            'main': 'index.js',
-            'package-deps': ['non-existent-package']
-          }
+            main: 'index.js',
+            'package-deps': ['non-existent-package'],
+          },
         }
-      } else return _.call(this, name)
+      }
+      return _.call(this, name)
     })
 
     await require('./fixtures/packages/some-package').activate()
@@ -53,7 +56,7 @@ describe('Main Module', function() {
 
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(2)
-    expect(notifications[1].type).toBe('error')
+    expect(notifications[1].type).toBe('warning')
   })
 
   it('can install multiple packages at once', async function() {
@@ -64,13 +67,13 @@ describe('Main Module', function() {
       if (name === 'some-package') {
         return {
           metadata: {
-            'main': 'index.js',
-            'package-deps': [packageNameFirst, packageNameSecond, 'tree-view']
-          }
+            main: 'index.js',
+            'package-deps': [packageNameFirst, packageNameSecond, 'tree-view'],
+          },
         }
-      } else return _.call(this, name)
+      }
+      return _.call(this, name)
     })
-    spyOn(Helpers, 'installDependencies').andCallThrough()
 
     expect(atom.packages.getActivePackage(packageNameFirst)).not.toBeDefined()
     expect(atom.packages.getActivePackage(packageNameSecond)).not.toBeDefined()
@@ -81,9 +84,8 @@ describe('Main Module', function() {
     await uninstallPackage(packageNameSecond)
 
     const notifications = atom.notifications.getNotifications()
-    expect(notifications.length).toBe(1)
+    expect(notifications.length).toBe(2)
     expect(notifications[0].type).toBe('info')
-    expect(Helpers.installDependencies.mostRecentCall.args[1]).toEqual([packageNameFirst, packageNameSecond])
   })
 
   it('works with hardcoded package names', async function() {
@@ -93,11 +95,12 @@ describe('Main Module', function() {
       if (name === 'some-package') {
         return {
           metadata: {
-            'main': 'index.js',
-            'package-deps': [packageName]
-          }
+            main: 'index.js',
+            'package-deps': [packageName],
+          },
         }
-      } else return _.call(this, name)
+      }
+      return _.call(this, name)
     })
 
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
@@ -106,7 +109,7 @@ describe('Main Module', function() {
     await uninstallPackage(packageName)
 
     const notifications = atom.notifications.getNotifications()
-    expect(notifications.length).toBe(1)
+    expect(notifications.length).toBe(2)
     expect(notifications[0].type).toBe('info')
   })
 
