@@ -14,18 +14,13 @@ You need to have an array of package deps in your package manifest, like
 }
 ```
 
-If you need to install package deps from a git remote (in any format supported by `apm install`, use an object instead of a string:
+If you need to install package deps from a source other than https://atom.io, suffix a `#` character followed by a git remote (in any format supported by `apm install`):
 
 ```js
 {
   "name": "linter-ruby",
   ...
-  "package-deps": [
-    {
-      "name": "linter",
-      "url": "steelbrain/linter"
-    }
-  ]
+  "package-deps": ["linter#steelbrain/linter"]
 }
 ```
 
