@@ -45,12 +45,20 @@ export function getDependencies(packageName: string): Array<string> {
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
 
   if (packageDependencies) {
-    for (const entry of (packageDependencies: Array<string>)) {
-      if (__steelbrain_package_deps.has(entry) || atom.packages.resolvePackagePath(entry)) {
+    for (const entry of (packageDependencies: Array<string | { name: string, url: string }>)) {
+      let entryName = entry
+      let entryUrl = entry
+
+      if (typeof entry === 'object') {
+        entryName = entry.name
+        entryUrl = entry.url
+      }
+
+      if (__steelbrain_package_deps.has(entryName) || atom.packages.resolvePackagePath(entryName)) {
         continue
       }
-      __steelbrain_package_deps.add(entry)
-      toReturn.push(entry)
+      __steelbrain_package_deps.add(entryName)
+      toReturn.push(entryUrl)
     }
   } else {
     console.error(`[Package-Deps] Unable to get loaded package '${packageName}'`)
