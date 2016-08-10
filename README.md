@@ -22,8 +22,8 @@ If you need to install package deps from a git remote (in any format supported b
   ...
   "package-deps": [
     {
-      "name: "linter",
-      "url" "steelbrain/linter"
+      "name": "linter",
+      "url": "steelbrain/linter"
     }
   ]
 }
