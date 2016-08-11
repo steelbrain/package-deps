@@ -45,13 +45,12 @@ export function getDependencies(packageName: string): Array<string> {
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
 
   if (packageDependencies) {
-    for (const entry of (packageDependencies: Array<string | { name: string, url: string }>)) {
+    for (const entry of (packageDependencies: Array<string>)) {
       let entryName = entry
       let entryUrl = entry
 
-      if (typeof entry === 'object') {
-        entryName = entry.name
-        entryUrl = entry.url
+      if (entry.indexOf('#') > -1) {
+        [entryName, entryUrl] = entry.split('#')
       }
 
       if (__steelbrain_package_deps.has(entryName) || atom.packages.resolvePackagePath(entryName)) {
