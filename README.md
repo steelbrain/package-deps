@@ -14,6 +14,21 @@ You need to have an array of package deps in your package manifest, like
 }
 ```
 
+If you need to install package deps from a git remote (in any format supported by `apm install`, use an object instead of a string:
+
+```js
+{
+  "name": "linter-ruby",
+  ...
+  "package-deps": [
+    {
+      "name": "linter",
+      "url": "steelbrain/linter"
+    }
+  ]
+}
+```
+
 Because the package installation is async, it returns a promise that resolves when all the dependencies have been installed.
 
 ```js

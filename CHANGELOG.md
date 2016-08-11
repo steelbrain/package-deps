@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.1
+
+*   Support git-based packages without repeatedly reinstalling
+
 ## 4.1.0
 
 *   Allow parallel installation of packages
