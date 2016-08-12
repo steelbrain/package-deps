@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.1.1
+## 4.2.0
 
 *   Support git-based packages without repeatedly reinstalling
 
