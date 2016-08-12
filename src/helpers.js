@@ -1,26 +1,27 @@
 /* @flow */
 
 import { exec } from 'sb-exec'
+import type { Dependency } from './types'
 
 const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
-export function apmInstall(dependencies: Array<string>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
+export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
   const errors = new Map()
   return Promise.all(dependencies.map(function(dependency) {
-    return exec(atom.packages.getApmPath(), ['install', dependency, '--production', '--color', 'false'], {
+    return exec(atom.packages.getApmPath(), ['install', dependency.url, '--production', '--color', 'false'], {
       stream: 'both',
       ignoreExitCode: true,
     }).then(function(output) {
       const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
-      progressCallback(dependency, successful)
+      progressCallback(dependency.name, successful)
       if (!successful) {
-        const error = new Error(`Error installing dependency: ${dependency}`)
+        const error = new Error(`Error installing dependency: ${dependency.name}`)
         error.stack = output.stderr
         throw error
       }
     }).catch(function(error) {
-      errors.set(dependency, error)
+      errors.set(dependency.name, error)
     })
   })).then(function() {
     return errors
@@ -39,7 +40,7 @@ export async function enablePackage(packageName: string): Promise<void> {
   }
 }
 
-export function getDependencies(packageName: string): Array<string> {
+export function getDependencies(packageName: string): Array<Dependency> {
   const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(packageName)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
@@ -57,7 +58,10 @@ export function getDependencies(packageName: string): Array<string> {
         continue
       }
       __steelbrain_package_deps.add(entryName)
-      toReturn.push(entryUrl)
+      toReturn.push({
+        url: entryUrl,
+        name: entryName,
+      })
     }
   } else {
     console.error(`[Package-Deps] Unable to get loaded package '${packageName}'`)
