@@ -13,7 +13,7 @@ export default class View {
     this.dependencies = dependencies
 
     const notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
-      detail: `Installing ${dependencies.join(', ')}`,
+      detail: `Installing ${dependencies.map(i => i.name).join(', ')}`,
       dismissable: true,
     })
     const progress = document.createElement('progress')
