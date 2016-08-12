@@ -1,17 +1,19 @@
 /* @flow */
 
+import type { Dependency } from './types'
+
 export default class View {
   name: string;
   advance: (() => void);
   dispose: (() => void);
-  dependencies: Array<string>;
+  dependencies: Array<Dependency>;
 
-  constructor(name: string, dependencies: Array<string>) {
+  constructor(name: string, dependencies: Array<Dependency>) {
     this.name = name
     this.dependencies = dependencies
 
     const notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
-      detail: `Installing ${dependencies.join(', ')}`,
+      detail: `Installing ${dependencies.map(i => i.name).join(', ')}`,
       dismissable: true,
     })
     const progress = document.createElement('progress')
@@ -35,7 +37,7 @@ export default class View {
     this.dispose()
     if (!errors.size) {
       atom.notifications.addSuccess(`Installed ${this.name} dependencies`, {
-        detail: `Installed ${this.dependencies.join(', ')}`,
+        detail: `Installed ${this.dependencies.map(i => i.name).join(', ')}`,
       })
       return
     }

@@ -5,6 +5,7 @@ import * as AtomPackagePath from 'atom-package-path'
 
 import * as Helpers from './helpers'
 import View from './view'
+import type { Dependency } from './types'
 
 if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
@@ -25,11 +26,11 @@ async function install(givenPackageName: ?string) {
   })
   const promises = []
   view.complete(errors)
-  for (const dependency of (dependencies: Array<string>)) {
-    if (errors.has(dependency)) {
+  for (const dependency of (dependencies: Array<Dependency>)) {
+    if (errors.has(dependency.name)) {
       continue
     }
-    promises.push(atom.packages.activatePackage(dependency))
+    promises.push(atom.packages.activatePackage(dependency.name))
   }
   await Promise.all(promises)
 }
