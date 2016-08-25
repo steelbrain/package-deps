@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.0
+
+*   Use babel style exports (backward compatible)
+
 ## 4.2.0
 
 *   Support git-based packages without repeatedly reinstalling

@@ -35,4 +35,5 @@ async function install(givenPackageName: ?string) {
   await Promise.all(promises)
 }
 
-module.exports.install = install
+export default install
+export { install }
