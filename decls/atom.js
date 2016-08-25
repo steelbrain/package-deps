@@ -5,7 +5,6 @@ declare var atom: Object;
 
 // Global Chromium CSS Object
 declare var CSS: Object;
-declare var HTMLElement: Object;
 
 declare module 'atom' {
   declare var Point: any;
