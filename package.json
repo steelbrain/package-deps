@@ -25,7 +25,7 @@
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
     "atom-package-path": "^1.1.0",
-    "sb-exec": "^2.0.5"
+    "sb-exec": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
