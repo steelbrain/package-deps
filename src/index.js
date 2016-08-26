@@ -11,8 +11,7 @@ if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
 }
 
-async function install(givenPackageName: ?string) {
-  const packageName = givenPackageName || AtomPackagePath.guessFromCallIndex(5)
+async function installDependencies(packageName: ?string): Promise<void> {
   invariant(packageName, '[Package-Deps] Failed to determine package name')
 
   const dependencies = Helpers.getDependencies(packageName)
@@ -33,6 +32,12 @@ async function install(givenPackageName: ?string) {
     promises.push(atom.packages.activatePackage(dependency.name))
   }
   await Promise.all(promises)
+}
+
+function install(givenPackageName: ?string) {
+  // NOTE: We are wrapping the async function in a sync function to avoid extra
+  // stack values before we extract names
+  return installDependencies(givenPackageName || AtomPackagePath.guessFromCallIndex(2))
 }
 
 export default install

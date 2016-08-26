@@ -2,6 +2,7 @@
 
 ## 4.3.0
 
+*   Fix support for upcoming Atom versions
 *   Use babel style exports (backward compatible)
 
 ## 4.2.0
