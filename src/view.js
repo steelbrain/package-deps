@@ -16,7 +16,7 @@ export default class View {
       detail: `Installing ${dependencies.map(i => i.name).join(', ')}`,
       dismissable: true,
     })
-    const progress = document.createElement('progress')
+    const progress: Object = document.createElement('progress')
     this.dispose = function() {
       notification.dismiss()
     }
