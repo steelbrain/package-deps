@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.1
+
+*   Bump `sb-exec` from `2.x` to `3.x`. This should fix any flow related bugs in dependent packages
+
 ## 4.3.0
 
 *   Fix support for upcoming Atom versions
