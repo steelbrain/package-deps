@@ -69,3 +69,28 @@ export function getDependencies(packageName: string): Array<Dependency> {
 
   return toReturn
 }
+
+export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<boolean> {
+  return new Promise(function(resolve) {
+    const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
+      dismissable: true,
+      icon: 'cloud-download',
+      detail: dependencies.map(e => e.name).join(', '),
+      description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
+      buttons: [{
+        text: 'Yes',
+        onDidClick: () => {
+          resolve(true)
+          notification.dismiss()
+        },
+      }, {
+        text: 'No Thanks',
+        onDidClick: () => {
+          resolve(false)
+          notification.dismiss()
+        },
+      }],
+    })
+    notification.onDidDismiss(() => resolve(false))
+  })
+}

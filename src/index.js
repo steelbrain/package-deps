@@ -11,7 +11,7 @@ if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
 }
 
-async function installDependencies(packageName: ?string): Promise<void> {
+async function installDependencies(packageName: string, promptUser: boolean): Promise<void> {
   invariant(packageName, '[Package-Deps] Failed to determine package name')
 
   const dependencies = Helpers.getDependencies(packageName)
@@ -20,32 +20,11 @@ async function installDependencies(packageName: ?string): Promise<void> {
   }
   await Helpers.enablePackage('notifications')
 
-  const userAccepted = await new Promise(function(resolve) {
-    const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
-      dismissable: true,
-      icon: 'cloud-download',
-      detail: dependencies.map(e => e.name).join(', '),
-      description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
-      buttons: [{
-        text: 'Yes',
-        onDidClick: () => {
-          resolve(true)
-          notification.dismiss()
-        },
-      }, {
-        text: 'No Thanks',
-        onDidClick: () => {
-          resolve(false)
-          notification.dismiss()
-        },
-      }],
-    })
-    notification.onDidDismiss(() => resolve(false))
-  })
-
-  if (!userAccepted) {
-    console.log(`User rejected installation of ${packageName} dependencies`)
-    return
+  if (promptUser) {
+    if (!await Helpers.promptUser(packageName, dependencies)) {
+      console.log(`User rejected installation of ${packageName} dependencies`)
+      return
+    }
   }
 
   const view = new View(packageName, dependencies)
@@ -63,10 +42,10 @@ async function installDependencies(packageName: ?string): Promise<void> {
   await Promise.all(promises)
 }
 
-function install(givenPackageName: ?string) {
+function install(givenPackageName: ?string, promptUser: boolean = false) {
   // NOTE: We are wrapping the async function in a sync function to avoid extra
   // stack values before we extract names
-  return installDependencies(givenPackageName || AtomPackagePath.guessFromCallIndex(2))
+  return installDependencies(givenPackageName || AtomPackagePath.guessFromCallIndex(2), promptUser)
 }
 
 export default install
