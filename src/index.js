@@ -19,6 +19,35 @@ async function installDependencies(packageName: ?string): Promise<void> {
     return
   }
   await Helpers.enablePackage('notifications')
+
+  const userAccepted = await new Promise(function(resolve) {
+    const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
+      dismissable: true,
+      icon: 'cloud-download',
+      detail: dependencies.map(e => e.name).join(', '),
+      description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
+      buttons: [{
+        text: 'Yes',
+        onDidClick: () => {
+          resolve(true)
+          notification.dismiss()
+        },
+      }, {
+        text: 'No Thanks',
+        onDidClick: () => {
+          resolve(false)
+          notification.dismiss()
+        },
+      }],
+    })
+    notification.onDidDismiss(() => resolve(false))
+  })
+
+  if (!userAccepted) {
+    console.log(`User rejected installation of ${packageName} dependencies`)
+    return
+  }
+
   const view = new View(packageName, dependencies)
   const errors = await Helpers.apmInstall(dependencies, function() {
     view.advance()
