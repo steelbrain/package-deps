@@ -70,7 +70,7 @@ export function getDependencies(packageName: string): Array<Dependency> {
   return toReturn
 }
 
-export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<boolean> {
+export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   return new Promise(function(resolve) {
     const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
       dismissable: true,
@@ -80,17 +80,17 @@ export function promptUser(packageName: string, dependencies: Array<Dependency>)
       buttons: [{
         text: 'Yes',
         onDidClick: () => {
-          resolve(true)
+          resolve('Yes')
           notification.dismiss()
         },
       }, {
         text: 'No Thanks',
         onDidClick: () => {
-          resolve(false)
+          resolve('No')
           notification.dismiss()
         },
       }],
     })
-    notification.onDidDismiss(() => resolve(false))
+    notification.onDidDismiss(() => resolve('No'))
   })
 }

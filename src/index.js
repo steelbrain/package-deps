@@ -22,7 +22,6 @@ async function installDependencies(packageName: string, promptUser: boolean): Pr
 
   if (promptUser) {
     if (!await Helpers.promptUser(packageName, dependencies)) {
-      console.log(`User rejected installation of ${packageName} dependencies`)
       return
     }
   }
