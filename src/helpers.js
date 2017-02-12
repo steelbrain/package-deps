@@ -70,6 +70,7 @@ export function getDependencies(packageName: string): Array<Dependency> {
   return toReturn
 }
 
+// TODO: Save the never into the db
 export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   return new Promise(function(resolve) {
     const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
@@ -87,6 +88,12 @@ export function promptUser(packageName: string, dependencies: Array<Dependency>)
         text: 'No Thanks',
         onDidClick: () => {
           resolve('No')
+          notification.dismiss()
+        },
+      }, {
+        text: 'Never',
+        onDidClick: () => {
+          resolve('Never')
           notification.dismiss()
         },
       }],
