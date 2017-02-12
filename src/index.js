@@ -14,7 +14,7 @@ if (typeof window.__steelbrain_package_deps === 'undefined') {
 async function installDependencies(packageName: ?string): Promise<void> {
   invariant(packageName, '[Package-Deps] Failed to determine package name')
 
-  let dependencies = Helpers.getDependencies(packageName)
+  const dependencies = Helpers.getDependencies(packageName)
   if (!dependencies.length) {
     return
   }
@@ -50,7 +50,7 @@ async function installDependencies(packageName: ?string): Promise<void> {
 
   const view = new View(packageName, dependencies)
   const errors = await Helpers.apmInstall(dependencies, function() {
-    resolve(view.advance())
+    view.advance()
   })
   const promises = []
   view.complete(errors)
