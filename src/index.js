@@ -20,39 +20,47 @@ async function installDependencies(packageName: ?string): Promise<void> {
   }
   await Helpers.enablePackage('notifications')
 
-  const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
-    dismissable: true,
-    icon: 'cloud-download',
-    detail: dependencies.map(e => e.name).join(', '),
-    description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
-    buttons: [{
-      text: 'Yes',
-      onDidClick: async () => {
-        notification.dismiss()
-        const view = new View(packageName, dependencies)
-        const errors = await new Promise(function(resolve) {
-          Helpers.apmInstall(dependencies, function() {
-            resolve(view.advance())
-          })
-        })
-        const promises = []
-        view.complete(errors)
-        for (const dependency of (dependencies: Array<Dependency>)) {
-          if (errors.has(dependency.name)) {
-            continue
-          }
-          promises.push(atom.packages.activatePackage(dependency.name))
-        }
-        console.log('finished installing package');
-        await Promise.all(promises)
-      },
-    }, {
-      text: 'No Thanks',
-      onDidClick: () => {
-        notification.dismiss()
-      },
-    }],
+  const userAccepted = await new Promise(function(resolve) {
+    const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
+      dismissable: true,
+      icon: 'cloud-download',
+      detail: dependencies.map(e => e.name).join(', '),
+      description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
+      buttons: [{
+        text: 'Yes',
+        onDidClick: () => {
+          resolve(true)
+          notification.dismiss()
+        },
+      }, {
+        text: 'No Thanks',
+        onDidClick: () => {
+          resolve(false)
+          notification.dismiss()
+        },
+      }],
+    })
+    notification.onDidDismiss(() => resolve(false))
   })
+
+  if (!userAccepted) {
+    console.log(`User rejected installation of ${packageName} dependencies`)
+    return
+  }
+
+  const view = new View(packageName, dependencies)
+  const errors = await Helpers.apmInstall(dependencies, function() {
+    resolve(view.advance())
+  })
+  const promises = []
+  view.complete(errors)
+  for (const dependency of (dependencies: Array<Dependency>)) {
+    if (errors.has(dependency.name)) {
+      continue
+    }
+    promises.push(atom.packages.activatePackage(dependency.name))
+  }
+  await Promise.all(promises)
 }
 
 function install(givenPackageName: ?string) {
