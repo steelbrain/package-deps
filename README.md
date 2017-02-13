@@ -48,5 +48,20 @@ While the package name argument of the `install()` function is optional it is re
 function install(packageName = null, showPrompt = false)
 ```
 
+#### Screenshots
+
+Installation Prompt
+
+<img src="https://cloud.githubusercontent.com/assets/4278113/22874485/10df8086-f1e8-11e6-8270-9b9823ba07f3.png">
+
+Installation Progress
+
+<img src="https://cloud.githubusercontent.com/assets/4278113/22874527/59b37c22-f1e8-11e6-968e-dfa857db7664.png">
+
+Installation Complete
+
+<img src="https://cloud.githubusercontent.com/assets/4278113/22874504/32294a88-f1e8-11e6-8741-81e368bb1649.png">
+
+
 #### License
 This project is licensed under the terms of MIT license, See the license file or contact me for more info.
