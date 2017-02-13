@@ -74,7 +74,6 @@ export function getDependencies(packageName: string): Array<Dependency> {
   return toReturn
 }
 
-// TODO: Save the never into the db
 export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
   const configFile = new ConfigFile(configPath, { ignored: [] })
