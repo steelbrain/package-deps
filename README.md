@@ -32,7 +32,7 @@ Because the package installation is async, it returns a promise that resolves wh
 module.exports = {
   activate() {
     // replace the example argument 'linter-ruby' with the name of this Atom package
-    require('atom-package-deps').install('linter-ruby')
+    require('atom-package-deps').install('linter-ruby', true)
       .then(function() {
         console.log('All dependencies installed, good to go')
       })
@@ -45,7 +45,7 @@ While the package name argument of the `install()` function is optional it is re
 #### API
 
 ```js
-function install(packageName = null)
+function install(packageName = null, showPrompt = false)
 ```
 
 #### License
