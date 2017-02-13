@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.4.0
+
+*   Add second parameter `showPrompt` to allow package authors to give user the choice to install dependencies
+
 ## 4.3.1
 
 *   Bump `sb-exec` from `2.x` to `3.x`. This should fix any flow related bugs in dependent packages
