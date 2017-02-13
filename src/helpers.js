@@ -78,7 +78,7 @@ export function getDependencies(packageName: string): Array<Dependency> {
 export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
   const configFile = new ConfigFile(configPath, { ignored: [] })
-  if (configFile.get('ignored').indexOf(packageName) !== -1) {
+  if (configFile.get('ignored').includes(packageName)) {
     return Promise.resolve('No')
   }
 
