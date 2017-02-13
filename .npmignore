@@ -2,3 +2,5 @@
 node_modules
 spec
 src
+decls
+.flowconfig
