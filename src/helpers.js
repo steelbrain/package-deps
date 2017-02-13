@@ -1,8 +1,12 @@
 /* @flow */
 
+import Path from 'path'
+import tildify from 'tildify'
 import { exec } from 'sb-exec'
+import ConfigFile from 'sb-config-file'
 import type { Dependency } from './types'
 
+let shownStorageInfo = false
 const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
@@ -68,4 +72,50 @@ export function getDependencies(packageName: string): Array<Dependency> {
   }
 
   return toReturn
+}
+
+// TODO: Save the never into the db
+export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
+  const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
+  const configFile = new ConfigFile(configPath, { ignored: [] })
+  if (configFile.get('ignored').includes(packageName)) {
+    return Promise.resolve('No')
+  }
+
+  return new Promise(function(resolve) {
+    const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
+      dismissable: true,
+      icon: 'cloud-download',
+      detail: dependencies.map(e => e.name).join(', '),
+      description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
+      buttons: [{
+        text: 'Yes',
+        onDidClick: () => {
+          resolve('Yes')
+          notification.dismiss()
+        },
+      }, {
+        text: 'No Thanks',
+        onDidClick: () => {
+          resolve('No')
+          notification.dismiss()
+        },
+      }, {
+        text: 'Never',
+        onDidClick: () => {
+          configFile.append('ignored', packageName)
+          if (!shownStorageInfo) {
+            shownStorageInfo = true
+            atom.notifications.addInfo('How to reset package-deps memory', {
+              dismissable: true,
+              description: `If you ever wish to change the packages package-deps never installs, please modify ${tildify(configPath)}`,
+            })
+          }
+          resolve('Never')
+          notification.dismiss()
+        },
+      }],
+    })
+    notification.onDidDismiss(() => resolve('No'))
+  })
 }
