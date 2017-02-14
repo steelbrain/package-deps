@@ -82,7 +82,7 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
     return Promise.resolve('No')
   }
 
-  return await new Promise(function(resolve) {
+  return new Promise(function(resolve) {
     const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
       dismissable: true,
       icon: 'cloud-download',
