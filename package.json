@@ -24,7 +24,7 @@
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
     "atom-package-path": "^1.1.0",
-    "sb-config-file": "^1.2.1",
+    "sb-config-file": "^3.0.0",
     "sb-exec": "^3.0.1",
     "tildify": "^1.2.0"
   },
