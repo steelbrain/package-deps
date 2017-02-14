@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.4.1
+
+*   Upgrade to latest `sb-config-file` that includes async getters so we don't avoid the event loop
+
 ## 4.4.0
 
 *   Add second parameter `showPrompt` to allow package authors to give user the choice to install dependencies
