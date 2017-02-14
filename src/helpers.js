@@ -74,10 +74,11 @@ export function getDependencies(packageName: string): Array<Dependency> {
   return toReturn
 }
 
-export function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
+export async function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
-  const configFile = new ConfigFile(configPath, { ignored: [] })
-  if (configFile.get('ignored').includes(packageName)) {
+  const configFile = await ConfigFile.get(configPath, { ignored: [] }, { createIfNonExistent: true })
+  const ignoredPackages = await configFile.get('ignored')
+  if (ignoredPackages.includes(packageName)) {
     return Promise.resolve('No')
   }
 
