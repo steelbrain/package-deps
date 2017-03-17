@@ -1,5 +1,5 @@
 module.exports = {
   activate() {
-    return require('../../../../').install()
+    return require('../../../../').install(null, false)
   }
 }
