@@ -14,20 +14,20 @@ const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
 export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
   const errors = new Map()
-  return Promise.all(dependencies.map(function(dependency) {
-    return exec(atom.packages.getApmPath(), ['install', `${dependency.url}@${dependency.version || 'latest'}`, '--production', '--color', 'false'], {
+  return Promise.all(dependencies.map(function(dep) {
+    return exec(atom.packages.getApmPath(), ['install', dep.version ? `${dep.url}@${dep.version}` : dep.url, '--production', '--color', 'false'], {
       stream: 'both',
       ignoreExitCode: true,
     }).then(function(output) {
       const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
-      progressCallback(dependency.name, successful)
+      progressCallback(dep.name, successful)
       if (!successful) {
-        const error = new Error(`Error installing dependency: ${dependency.name}`)
+        const error = new Error(`Error installing dependency: ${dep.name}`)
         error.stack = output.stderr
         throw error
       }
     }).catch(function(error) {
-      errors.set(dependency.name, error)
+      errors.set(dep.name, error)
     })
   })).then(function() {
     return errors
@@ -69,7 +69,7 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
       if (resolvedPath) {
         if (!parsed.version) continue
         const manifest = JSON.parse(await FS.readFile(Path.join(resolvedPath, 'package.json')))
-        if (semver.satisfies(manifest.version, parsed.version)) continue
+        if (semver.satisfies(manifest.version, `>=${parsed.version}`)) continue
       }
       __steelbrain_package_deps.add(parsed.name)
       toReturn.push(parsed)
