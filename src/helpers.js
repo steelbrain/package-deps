@@ -44,6 +44,7 @@ export async function enablePackage(packageName: string): Promise<void> {
   }
 }
 
+const DEPENDENCY_REGEX = /^([^#:]+)(#[^:]+)?(:.*+)?$/
 export function getDependencies(packageName: string): Array<Dependency> {
   const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(packageName)
@@ -51,21 +52,21 @@ export function getDependencies(packageName: string): Array<Dependency> {
 
   if (packageDependencies) {
     for (const entry of (packageDependencies: Array<string>)) {
-      let entryName = entry
-      let entryUrl = entry
-
-      if (entry.indexOf('#') > -1) {
-        [entryName, entryUrl] = entry.split('#')
-      }
-
-      if (__steelbrain_package_deps.has(entryName) || atom.packages.resolvePackagePath(entryName)) {
+      const matches = DEPENDENCY_REGEX.exec(entry)
+      if (matches === null) {
+        console.error('[Package-Deps] Error parsing package-deps entry of', packageName, 'with value:', entry)
         continue
       }
-      __steelbrain_package_deps.add(entryName)
-      toReturn.push({
-        url: entryUrl,
-        name: entryName,
-      })
+      const parsed = {
+        name: matches[1],
+        url: matches[2] || matches[1],
+        version: matches[3] || null,
+      }
+      if (__steelbrain_package_deps.has(parsed.name) || atom.packages.resolvePackagePath(parsed.name)) {
+        continue
+      }
+      __steelbrain_package_deps.add(parsed.name)
+      toReturn.push(parsed)
     }
   } else {
     console.error(`[Package-Deps] Unable to get loaded package '${packageName}'`)
