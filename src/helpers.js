@@ -15,7 +15,7 @@ const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
   const errors = new Map()
   return Promise.all(dependencies.map(function(dependency) {
-    return exec(atom.packages.getApmPath(), ['install', dependency.url, '--production', '--color', 'false'], {
+    return exec(atom.packages.getApmPath(), ['install', `${dependency.url}@${dependency.version || 'latest'}`, '--production', '--color', 'false'], {
       stream: 'both',
       ignoreExitCode: true,
     }).then(function(output) {
