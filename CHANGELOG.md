@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.5.0
 
 *   Enable prompting user by default
 *   Add `:$version` support to package dependencies
