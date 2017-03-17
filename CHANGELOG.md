@@ -2,6 +2,7 @@
 
 ## Upcoming
 
+*   Enable prompting user by default
 *   Add `:$version` support to package dependencies
 
 ## 4.4.1
