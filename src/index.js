@@ -42,7 +42,7 @@ async function installDependencies(packageName: string, promptUser: boolean): Pr
   await Promise.all(promises)
 }
 
-function install(givenPackageName: ?string = null, promptUser: boolean = false) {
+function install(givenPackageName: ?string = null, promptUser: boolean = true) {
   // NOTE: We are wrapping the async function in a sync function to avoid extra
   // stack values before we extract names
   return installDependencies(givenPackageName || AtomPackagePath.guessFromCallIndex(2), promptUser)
