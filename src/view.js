@@ -44,7 +44,7 @@ export default class View {
     const packages = []
     for (const [packageName, error] of errors) {
       packages.push(`  • ${packageName}`)
-      console.error('[Package-Deps] Unable to install', packageName, ', Error:', ((error && error.stack) || error))
+      console.error(`[Package-Deps] Unable to install ${packageName}, Error:`, ((error && error.stack) || error))
     }
     atom.notifications.addWarning(`Failed to install ${this.name} dependencies`, {
       detail: `These packages were not installed, check your console\nfor more info.\n${packages.join('\n')}`,
