@@ -46,7 +46,7 @@ export async function enablePackage(packageName: string): Promise<void> {
   }
 }
 
-const DEPENDENCY_REGEX = /^([^#:]+)(#[^:]+)?(:.+)?$/
+const DEPENDENCY_REGEX = /^([^#:]+)(?:#([^:]+))?(?::(.+))?$/
 export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
   const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(packageName)
@@ -56,7 +56,7 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
     for (const entry of (packageDependencies: Array<string>)) {
       const matches = DEPENDENCY_REGEX.exec(entry)
       if (matches === null) {
-        console.error('[Package-Deps] Error parsing package-deps entry of', packageName, 'with value:', entry)
+        console.error('[Package-Deps] Error parsing dependency of', packageName, 'with value:', entry)
         continue
       }
       const parsed = {
