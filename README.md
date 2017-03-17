@@ -24,7 +24,7 @@ If you need to install package deps from a source other than https://atom.io, su
 }
 ```
 
-If you need to install specific version of a package, you can suffix the package semver-compatible range with a `:`:
+If you need to install specific version of a package, you can add a semver-compatible range to the package name, separated by `:`:
 
 ```js
 {
