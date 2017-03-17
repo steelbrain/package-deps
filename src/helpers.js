@@ -1,6 +1,8 @@
 /* @flow */
 
+import FS from 'sb-fs'
 import Path from 'path'
+import semver from 'semver'
 import tildify from 'tildify'
 import { exec } from 'sb-exec'
 import ConfigFile from 'sb-config-file'
@@ -44,8 +46,8 @@ export async function enablePackage(packageName: string): Promise<void> {
   }
 }
 
-const DEPENDENCY_REGEX = /^([^#:]+)(#[^:]+)?(:.*+)?$/
-export function getDependencies(packageName: string): Array<Dependency> {
+const DEPENDENCY_REGEX = /^([^#:]+)(#[^:]+)?(:.+)?$/
+export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
   const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(packageName)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
@@ -62,8 +64,12 @@ export function getDependencies(packageName: string): Array<Dependency> {
         url: matches[2] || matches[1],
         version: matches[3] || null,
       }
-      if (__steelbrain_package_deps.has(parsed.name) || atom.packages.resolvePackagePath(parsed.name)) {
-        continue
+      if (__steelbrain_package_deps.has(parsed.name)) continue
+      const resolvedPath = atom.packages.resolvePackagePath(parsed.name)
+      if (resolvedPath) {
+        if (!parsed.version) continue
+        const manifest = JSON.parse(await FS.readFile(Path.join(resolvedPath, 'package.json')))
+        if (semver.satisfies(manifest.version, parsed.version)) continue
       }
       __steelbrain_package_deps.add(parsed.name)
       toReturn.push(parsed)

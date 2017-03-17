@@ -14,7 +14,7 @@ if (typeof window.__steelbrain_package_deps === 'undefined') {
 async function installDependencies(packageName: string, promptUser: boolean): Promise<void> {
   invariant(packageName, '[Package-Deps] Failed to determine package name')
 
-  const dependencies = Helpers.getDependencies(packageName)
+  const dependencies = await Helpers.getDependencies(packageName)
   if (!dependencies.length) {
     return
   }
