@@ -24,13 +24,13 @@ If you need to install package deps from a source other than https://atom.io, su
 }
 ```
 
-If you need to install specific version of a package, you can suffix the package version with a `:`:
+If you need to install specific version of a package, you can suffix the package semver-compatible range with a `:`:
 
 ```js
 {
   "name": "linter-ruby",
   ...
-  "package-deps": ["linter:2"]
+  "package-deps": ["linter:^2"]
 }
 ```
 
