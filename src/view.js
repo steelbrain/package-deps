@@ -13,7 +13,7 @@ export default class View {
     this.dependencies = dependencies
 
     const notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
-      detail: `Installing ${dependencies.map(i => i.name).join(', ')}`,
+      detail: `Installing ${dependencies.map(View.getDependencyName).join(', ')}`,
       dismissable: true,
     })
     const progress: Object = document.createElement('progress')
@@ -37,7 +37,7 @@ export default class View {
     this.dispose()
     if (!errors.size) {
       atom.notifications.addSuccess(`Installed ${this.name} dependencies`, {
-        detail: `Installed ${this.dependencies.map(i => i.name).join(', ')}`,
+        detail: `Installed ${this.dependencies.map(View.getDependencyName).join(', ')}`,
       })
       return
     }
@@ -50,5 +50,8 @@ export default class View {
       detail: `These packages were not installed, check your console\nfor more info.\n${packages.join('\n')}`,
       dismissable: true,
     })
+  }
+  static getDependencyName(dependency: Dependency): string {
+    return `${dependency.name}${dependency.version ? ` v${dependency.version}` : ''}`
   }
 }
