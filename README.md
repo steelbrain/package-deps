@@ -1,5 +1,7 @@
 # Atom-Package-Deps
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/steelbrain/package-deps.svg)](https://greenkeeper.io/)
+
 Atom-Package-Deps is a module that lets your atom package depend on other atom packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
 
 #### How it works?

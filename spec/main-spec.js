@@ -11,6 +11,9 @@ describe('Main Module', function() {
       Path.join(atom.packages.getPackageDirPaths().pop(), name)
     )
   }
+  function getPackage(name) {
+    return require(`./fixtures/packages/${name}`)
+  }
 
   it('works as a whole', async function() {
     const _ = atom.packages.getLoadedPackage
@@ -28,7 +31,7 @@ describe('Main Module', function() {
     })
 
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
-    await require('./fixtures/packages/some-package').activate()
+    await getPackage('some-package').activate()
     expect(atom.packages.getActivePackage(packageName)).toBeDefined()
     await uninstallPackage(packageName)
 
@@ -51,7 +54,7 @@ describe('Main Module', function() {
       return _.call(this, name)
     })
 
-    await require('./fixtures/packages/some-package').activate()
+    await getPackage('some-package').activate()
     await wait(50)
 
     const notifications = atom.notifications.getNotifications()
@@ -77,7 +80,7 @@ describe('Main Module', function() {
 
     expect(atom.packages.getActivePackage(packageNameFirst)).not.toBeDefined()
     expect(atom.packages.getActivePackage(packageNameSecond)).not.toBeDefined()
-    await require('./fixtures/packages/some-package').activate()
+    await getPackage('some-package').activate()
     expect(atom.packages.getActivePackage(packageNameFirst)).toBeDefined()
     expect(atom.packages.getActivePackage(packageNameSecond)).toBeDefined()
     await uninstallPackage(packageNameFirst)
@@ -104,7 +107,7 @@ describe('Main Module', function() {
     })
 
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
-    await require('./fixtures/packages/some-package/index-hardcoded-name').activate()
+    await getPackage('some-package/index-hardcoded-name').activate()
     expect(atom.packages.getActivePackage(packageName)).toBeDefined()
     await uninstallPackage(packageName)
 
@@ -114,7 +117,7 @@ describe('Main Module', function() {
   })
 
   it('stays silent when that package name is not found in active packages', async function() {
-    await require('./fixtures/packages/some-package/index-hardcoded-name').activate()
+    await getPackage('some-package/index-hardcoded-name').activate()
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(0)
   })
