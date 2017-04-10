@@ -83,9 +83,17 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
 
 export async function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   const configPath = atom.config.getUserConfigPath()
-  const ignoredPackages = atom.config.get('sb-package-deps.ignored')
+  const oldConfigPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
+  let ignoredPackages = atom.config.get('sb-package-deps.ignored')
+
+  if (await FS.exists(oldConfigPath)) {
+    const oldConfig = JSON.parse(await FS.readFile(oldConfigPath, 'utf8'))
+    atom.config.set('sb-package-deps.ignored', ignoredPackages = oldConfig.ignored)
+    await FS.unlink(oldConfigPath)
+  }
+
   if (ignoredPackages.includes(packageName)) {
-    return Promise.resolve('No')
+    return 'No'
   }
 
   return new Promise(function(resolve) {
