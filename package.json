@@ -26,8 +26,7 @@
     "atom-package-path": "^1.1.0",
     "sb-exec": "^3.0.1",
     "sb-fs": "^3.0.0",
-    "semver": "^5.3.0",
-    "tildify": "^1.2.0"
+    "semver": "^5.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
