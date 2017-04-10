@@ -5,7 +5,6 @@ import Path from 'path'
 import semver from 'semver'
 import tildify from 'tildify'
 import { exec } from 'sb-exec'
-import ConfigFile from 'sb-config-file'
 import type { Dependency } from './types'
 
 let shownStorageInfo = false
@@ -83,9 +82,8 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
 }
 
 export async function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
-  const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
-  const configFile = await ConfigFile.get(configPath, { ignored: [] }, { createIfNonExistent: true })
-  const ignoredPackages = await configFile.get('ignored')
+  const configPath = atom.config.getUserConfigPath()
+  const ignoredPackages = atom.config.get('sb-package-deps.ignored')
   if (ignoredPackages.includes(packageName)) {
     return Promise.resolve('No')
   }
@@ -111,12 +109,13 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
       }, {
         text: 'Never',
         onDidClick: () => {
-          configFile.append('ignored', packageName)
+          ignoredPackages.push(packageName)
+          atom.config.set('sb-package-deps.ignored', ignoredPackages)
           if (!shownStorageInfo) {
             shownStorageInfo = true
             atom.notifications.addInfo('How to reset package-deps memory', {
               dismissable: true,
-              description: `If you ever wish to change the packages package-deps never installs, please modify ${tildify(configPath)}`,
+              description: `If you ever wish to change the packages package-deps never installs, please modify ${tildify(configPath)}.sb-package-deps.ignored`,
             })
           }
           resolve('Never')
