@@ -68,6 +68,7 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
       const resolvedPath = atom.packages.resolvePackagePath(parsed.name)
       if (resolvedPath) {
         if (!parsed.version) continue
+        // eslint-disable-next-line no-await-in-loop
         const manifest = JSON.parse(await FS.readFile(Path.join(resolvedPath, 'package.json')))
         if (semver.satisfies(manifest.version, `>=${parsed.version}`)) continue
       }

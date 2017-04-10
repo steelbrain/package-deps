@@ -8,10 +8,11 @@ import { it } from './helpers'
 describe('Main Module', function() {
   function uninstallPackage(name) {
     return atom.packages.uninstallDirectory(
-      Path.join(atom.packages.getPackageDirPaths().pop(), name)
+      Path.join(atom.packages.getPackageDirPaths().pop(), name),
     )
   }
   function getPackage(name) {
+    // eslint-disable-next-line import/no-dynamic-require
     return require(`./fixtures/packages/${name}`)
   }
 
