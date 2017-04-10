@@ -3,9 +3,7 @@
 import FS from 'sb-fs'
 import Path from 'path'
 import semver from 'semver'
-import tildify from 'tildify'
 import { exec } from 'sb-exec'
-import ConfigFile from 'sb-config-file'
 import type { Dependency } from './types'
 
 let shownStorageInfo = false
@@ -83,11 +81,17 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
 }
 
 export async function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
-  const configPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
-  const configFile = await ConfigFile.get(configPath, { ignored: [] }, { createIfNonExistent: true })
-  const ignoredPackages = await configFile.get('ignored')
+  const oldConfigPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
+  let ignoredPackages = atom.config.get('atom-package-deps.ignored')
+
+  if (await FS.exists(oldConfigPath)) {
+    const oldConfig = JSON.parse(await FS.readFile(oldConfigPath, 'utf8'))
+    atom.config.set('atom-package-deps.ignored', ignoredPackages = oldConfig.ignored)
+    await FS.unlink(oldConfigPath)
+  }
+
   if (ignoredPackages.includes(packageName)) {
-    return Promise.resolve('No')
+    return 'No'
   }
 
   return new Promise(function(resolve) {
@@ -111,12 +115,13 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
       }, {
         text: 'Never',
         onDidClick: () => {
-          configFile.append('ignored', packageName)
+          ignoredPackages.push(packageName)
+          atom.config.set('atom-package-deps.ignored', ignoredPackages)
           if (!shownStorageInfo) {
             shownStorageInfo = true
             atom.notifications.addInfo('How to reset package-deps memory', {
               dismissable: true,
-              description: `If you ever wish to change the packages package-deps never installs, please modify ${tildify(configPath)}`,
+              description: "To modify the list of ignored files invoke 'Application: Open Your Config' and change the 'atom-package-deps' section",
             })
           }
           resolve('Never')
