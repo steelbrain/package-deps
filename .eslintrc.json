@@ -1,10 +1,11 @@
 {
   "extends": "steelbrain",
   "rules": {
-    "no-param-reassign": 0,
-    "no-duplicate-imports": 0,
-    "no-underscore-dangle": 0,
-    "import/prefer-default-export": 0
+    "no-param-reassign": "off",
+    "no-duplicate-imports": "off",
+    "no-underscore-dangle": "off",
+    "import/prefer-default-export": "off",
+    "no-await-in-loop": "off"
   },
   "globals": {
     "BufferedProcess": true,
