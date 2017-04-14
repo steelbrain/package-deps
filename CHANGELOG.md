@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.6.0
+
+- Remove config file usage, configs are now stored in Atom config store
+
 ## 4.5.0
 
 *   Enable prompting user by default
