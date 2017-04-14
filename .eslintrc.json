@@ -4,8 +4,7 @@
     "no-param-reassign": "off",
     "no-duplicate-imports": "off",
     "no-underscore-dangle": "off",
-    "import/prefer-default-export": "off",
-    "no-await-in-loop": "off"
+    "import/prefer-default-export": "off"
   },
   "globals": {
     "BufferedProcess": true,
