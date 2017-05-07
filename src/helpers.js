@@ -10,7 +10,7 @@ let shownStorageInfo = false
 const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
-export function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
+function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
   return new Promise(function(resolve) {
     const data = { stdout: [], stderr: [] }
     const spawnedProcess = new BufferedProcess({
