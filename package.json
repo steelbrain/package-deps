@@ -24,7 +24,6 @@
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
     "atom-package-path": "^1.1.0",
-    "sb-exec": "^4.0.0",
     "sb-fs": "^3.0.0",
     "semver": "^5.3.0"
   },

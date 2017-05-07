@@ -3,30 +3,50 @@
 import FS from 'sb-fs'
 import Path from 'path'
 import semver from 'semver'
-import { exec } from 'sb-exec'
+import { BufferedProcess } from 'atom'
 import type { Dependency } from './types'
 
 let shownStorageInfo = false
 const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
+function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
+  return new Promise(function(resolve) {
+    const data = { stdout: [], stderr: [] }
+    const spawnedProcess = new BufferedProcess({
+      command,
+      args: parameters,
+      stdout(chunk) {
+        data.stdout.push(chunk)
+      },
+      stderr(chunk) {
+        data.stderr.push(chunk)
+      },
+      exit() {
+        resolve({ stdout: data.stdout.join(''), stderr: data.stderr.join('') })
+      },
+      autoStart: false,
+    })
+    spawnedProcess.start()
+  })
+}
+
 export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
   const errors = new Map()
   return Promise.all(dependencies.map(function(dep) {
-    return exec(atom.packages.getApmPath(), ['install', dep.version ? `${dep.url}@${dep.version}` : dep.url, '--production', '--color', 'false'], {
-      stream: 'both',
-      ignoreExitCode: true,
-    }).then(function(output) {
-      const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
-      progressCallback(dep.name, successful)
-      if (!successful) {
-        const error = new Error(`Error installing dependency: ${dep.name}`)
-        error.stack = output.stderr
-        throw error
-      }
-    }).catch(function(error) {
-      errors.set(dep.name, error)
-    })
+    return exec(atom.packages.getApmPath(), ['install', dep.version ? `${dep.url}@${dep.version}` : dep.url, '--production', '--color', 'false'])
+      .then(function(output) {
+        const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
+        progressCallback(dep.name, successful)
+        if (!successful) {
+          const error = new Error(`Error installing dependency: ${dep.name}`)
+          error.stack = output.stderr
+          throw error
+        }
+      })
+      .catch(function(error) {
+        errors.set(dep.name, error)
+      })
   })).then(function() {
     return errors
   })
