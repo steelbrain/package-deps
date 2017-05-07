@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+
+- Remove `sb-exec` in favor of `BufferedProcess` from Atom builtins
+
 ## 4.6.0
 
 - Remove config file usage, configs are now stored in Atom config store
