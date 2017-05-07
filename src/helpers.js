@@ -13,7 +13,7 @@ const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 export function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
   return new Promise(function(resolve) {
     const data = { stdout: [], stderr: [] }
-    const spawnedProcess = BufferedProcess({
+    const spawnedProcess = new BufferedProcess({
       command,
       args: parameters,
       stdout(chunk) {
