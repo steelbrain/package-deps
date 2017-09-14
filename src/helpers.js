@@ -52,18 +52,6 @@ export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((
   })
 }
 
-export async function enablePackage(packageName: string): Promise<void> {
-  if (atom.packages.isPackageDisabled(packageName)) {
-    atom.packages.enablePackage(packageName)
-  }
-  if (!atom.packages.isPackageLoaded(packageName)) {
-    atom.packages.loadPackage(packageName)
-  }
-  if (!atom.packages.isPackageActive(packageName)) {
-    await atom.packages.activatePackage(packageName)
-  }
-}
-
 const DEPENDENCY_REGEX = /^([^#:]+)(?:#([^:]+))?(?::(.+))?$/
 export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
   const toReturn = []
