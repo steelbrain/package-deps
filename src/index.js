@@ -18,7 +18,6 @@ async function installDependencies(packageName: string, promptUser: boolean): Pr
   if (!dependencies.length) {
     return
   }
-  await Helpers.enablePackage('notifications')
 
   if (promptUser) {
     const choice = await Helpers.promptUser(packageName, dependencies)
