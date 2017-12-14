@@ -52,18 +52,6 @@ export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((
   })
 }
 
-export async function enablePackage(packageName: string): Promise<void> {
-  if (atom.packages.isPackageDisabled(packageName)) {
-    atom.packages.enablePackage(packageName)
-  }
-  if (!atom.packages.isPackageLoaded(packageName)) {
-    atom.packages.loadPackage(packageName)
-  }
-  if (!atom.packages.isPackageActive(packageName)) {
-    await atom.packages.activatePackage(packageName)
-  }
-}
-
 const DEPENDENCY_REGEX = /^([^#:]+)(?:#([^:]+))?(?::(.+))?$/
 export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
   const toReturn = []
@@ -112,6 +100,10 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
 
   if (ignoredPackages.includes(packageName)) {
     return 'No'
+  }
+
+  if (atom.packages.isPackageDisabled('notifications')) {
+    console.warn(`Enable notifications to install dependencies for ${packageName}`)
   }
 
   return new Promise(function(resolve) {
