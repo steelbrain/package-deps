@@ -102,6 +102,10 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
     return 'No'
   }
 
+  if (atom.packages.isPackageDisabled('notifications')) {
+    console.warn(`Enable notifications to install dependencies for ${packageName}`)
+  }
+
   return new Promise(function(resolve) {
     const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
       dismissable: true,
