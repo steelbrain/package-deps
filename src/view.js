@@ -27,7 +27,7 @@ export default class View {
     progress.style.width = '100%'
     try {
       const notificationView = atom.views.getView(notification)
-      const notificationContent = notificationView.querySelector('.detail-content')
+      const notificationContent = notificationView.querySelector('.detail-content') || notificationView.querySelector('.content')
       if (notificationContent) {
         notificationContent.appendChild(progress)
       }

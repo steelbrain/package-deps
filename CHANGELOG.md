@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.6.2
+
+* Fix progress bar not showing up in newer versions of Atom
+
 ## 4.6.1
 
 * Remove `sb-exec` in favor of `BufferedProcess` from Atom builtins
