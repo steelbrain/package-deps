@@ -38,13 +38,7 @@ export function apmInstall(
   const errors = new Map()
   return Promise.all(
     dependencies.map(function(dep) {
-      return exec(atom.packages.getApmPath(), [
-        'install',
-        dep.version ? `${dep.url}@${dep.version}` : dep.url,
-        '--production',
-        '--color',
-        'false',
-      ])
+      return exec(atom.packages.getApmPath(), ['install', dep.url || dep.name, '--production', '--color', 'false'])
         .then(function(output) {
           let successful = VALIDATION_REGEXP.test(output.stdout)
           if (successful) {
@@ -65,17 +59,6 @@ export function apmInstall(
   ).then(function() {
     return errors
   })
-}
-
-async function getLatestVersionOfPackage(packageName: string, defaultVersion: string) {
-  try {
-    const response = await (await fetch(`https://atom.io/api/packages/${packageName}`)).json()
-
-    return Object.keys(response.versions).shift() || defaultVersion
-  } catch (error) {
-    // Ignore http errors
-    return defaultVersion
-  }
 }
 
 const DEPENDENCY_REGEX_VERSION = /(.*?):.*/
@@ -108,12 +91,6 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
         name = entry
       }
 
-      if (name && version) {
-        // Get the latest version of the package - the specified one could be out of date
-        // so user would have to install and then instantly update :(
-        version = await getLatestVersionOfPackage(name, version)
-      }
-
       if (__steelbrain_package_deps.has(name)) {
         return null
       }
@@ -132,7 +109,7 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
       }
       __steelbrain_package_deps.add(name)
 
-      return { name, version, url }
+      return { name, url }
     }),
   )).filter(Boolean)
 }
