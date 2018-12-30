@@ -8,7 +8,7 @@
     "prepare": "npm run compile",
     "compile": "sb-babel-cli src -o lib",
     "watch": "npm run compile -- -w",
-    "lint": "(eslint .) && (flow check)"
+    "lint": "(eslint .) && (flow check) && (prettier --list-different src/*.js)"
   },
   "repository": {
     "type": "git",
