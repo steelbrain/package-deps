@@ -4,10 +4,11 @@
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
   "scripts": {
-    "test": "(apm test) && (flow check) && (eslint . )",
+    "test": "(apm test) && (flow check)",
     "prepare": "npm run compile",
     "compile": "sb-babel-cli src -o lib",
-    "watch": "npm run compile -- -w"
+    "watch": "npm run compile -- -w",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
