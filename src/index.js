@@ -1,7 +1,6 @@
 /* @flow */
 
 import invariant from 'assert'
-import * as AtomPackagePath from 'atom-package-path'
 
 import * as Helpers from './helpers'
 import View from './view'
@@ -11,8 +10,8 @@ if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
 }
 
-async function installDependencies(packageName: string, promptUser: boolean): Promise<void> {
-  invariant(packageName, '[Package-Deps] Failed to determine package name')
+async function installDependencies(packageName: string, promptUser: boolean = true): Promise<void> {
+  invariant(packageName, '[Package-Deps] Package name is required')
 
   const dependencies = await Helpers.getDependencies(packageName)
   if (!dependencies.length) {
@@ -41,11 +40,4 @@ async function installDependencies(packageName: string, promptUser: boolean): Pr
   await Promise.all(promises)
 }
 
-function install(givenPackageName: ?string = null, promptUser: boolean = true) {
-  // NOTE: We are wrapping the async function in a sync function to avoid extra
-  // stack values before we extract names
-  return installDependencies(givenPackageName || AtomPackagePath.guessFromCallIndex(2), promptUser)
-}
-
-export default install
-export { install }
+export { installDependencies as install }
