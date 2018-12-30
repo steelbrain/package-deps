@@ -40,12 +40,11 @@ module.exports = {
 }
 ```
 
-While the package name argument of the `install()` function is optional it is recommended to pass it explicitly since otherwise the lookup of the package name inflicts an overhead of roughly a few milliseconds.
 
 #### API
 
 ```js
-function install(packageName = null, showPrompt = true)
+export function install(packageName, showPrompt = true)
 ```
 
 #### Screenshots
