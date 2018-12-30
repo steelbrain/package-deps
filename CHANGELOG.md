@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.0
+
+* Name is now required
+* When version is specified and package-deps determines currently installed to be outdated, latest version will be installed instead of the specified one
+
 ## 4.6.2
 
 * Fix progress bar not showing up in newer versions of Atom
