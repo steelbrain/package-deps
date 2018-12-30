@@ -1,5 +1,7 @@
 # Atom-Package-Deps
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/steelbrain/package-deps.svg)](https://greenkeeper.io/)
+
 Atom-Package-Deps is a module that lets your atom package depend on other atom packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
 
 #### How it works?
@@ -21,6 +23,16 @@ If you need to install package deps from a source other than https://atom.io, su
   "name": "linter-ruby",
   ...
   "package-deps": ["linter#steelbrain/linter"]
+}
+```
+
+If you need to install specific version of a package, you can add the minimum required version to the package name (semver doesn't work!), like this
+
+```js
+{
+  "name": "linter-ruby",
+  ...
+  "package-deps": ["linter:2.0.0"]
 }
 ```
 
