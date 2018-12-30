@@ -1,6 +1,6 @@
 /* @flow */
 
-import FS from 'sb-fs'
+import fs from 'sb-fs'
 import Path from 'path'
 import semver from 'semver'
 import { BufferedProcess } from 'atom'
@@ -64,50 +64,82 @@ export function apmInstall(
   })
 }
 
-const DEPENDENCY_REGEX = /^([^#:]+)(?:#([^:]+))?(?::(.+))?$/
+async function getLatestVersionOfPackage(packageName: string, defaultVersion: string) {
+  try {
+    const response = await (await fetch(`https://atom.io/api/packages/${packageName}`)).json()
+
+    return Object.keys(response.versions).shift() || defaultVersion
+  } catch (error) {
+    // Ignore http errors
+    return defaultVersion
+  }
+}
+
+const DEPENDENCY_REGEX_VERSION = /(.*?):.*/
+const DEPENDENCY_REGEX_GIT = /(.*?)#.*/
 export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
-  const toReturn = []
   const packageModule = atom.packages.getLoadedPackage(packageName)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
 
-  if (packageDependencies) {
-    for (const entry of (packageDependencies: Array<string>)) {
-      const matches = DEPENDENCY_REGEX.exec(entry)
-      if (matches === null) {
-        console.error('[Package-Deps] Error parsing dependency of', packageName, 'with value:', entry)
-        continue
-      }
-      const parsed = {
-        name: matches[1],
-        url: matches[2] || matches[1],
-        version: matches[3] || null,
-      }
-      if (__steelbrain_package_deps.has(parsed.name)) continue
-      const resolvedPath = atom.packages.resolvePackagePath(parsed.name)
-      if (resolvedPath) {
-        if (!parsed.version) continue
-        const manifest = JSON.parse(await FS.readFile(Path.join(resolvedPath, 'package.json')))
-        // $FlowIgnore: Flow is paranoid, this parsed.version is NOT NULL
-        if (semver.satisfies(manifest.version, `>=${parsed.version}`)) continue
-      }
-      __steelbrain_package_deps.add(parsed.name)
-      toReturn.push(parsed)
-    }
-  } else {
+  if (!Array.isArray(packageDependencies)) {
     console.error(`[Package-Deps] Unable to get loaded package '${packageName}'`)
+    return []
   }
+  return (await Promise.all(
+    packageDependencies.map(async function(entry) {
+      let url = null
+      let name = entry
+      let version = null
 
-  return toReturn
+      if (DEPENDENCY_REGEX_VERSION.test(entry)) {
+        const match = DEPENDENCY_REGEX_VERSION.exec(entry)
+        if (match) {
+          ;[, name, version] = match
+        }
+      } else if (DEPENDENCY_REGEX_GIT.test(entry)) {
+        const match = DEPENDENCY_REGEX_GIT.exec(entry)
+        if (match) {
+          ;[, name, url] = match
+        }
+      } else {
+        name = entry
+      }
+
+      if (name && version) {
+        // Get the latest version of the package - the specified one could be out of date
+        // so user would have to install and then instantly update :(
+        version = await getLatestVersionOfPackage(name, version)
+      }
+
+      if (__steelbrain_package_deps.has(name)) {
+        return null
+      }
+
+      const resolvedPath = atom.packages.resolvePackagePath(name)
+      if (resolvedPath) {
+        if (!version) {
+          return null
+        }
+
+        const manifest = JSON.parse(await fs.readFile(Path.join(resolvedPath, 'package.json')))
+        // $FlowIgnore: Flow is paranoid, this parsed.version is NOT NULL
+        if (semver.satisfies(manifest.version, `>=${version}`)) return null
+      }
+      __steelbrain_package_deps.add(name)
+
+      return { name, version, url }
+    }),
+  )).filter(Boolean)
 }
 
 export async function promptUser(packageName: string, dependencies: Array<Dependency>): Promise<'Yes' | 'No' | 'Never'> {
   const oldConfigPath = Path.join(atom.getConfigDirPath(), 'package-deps-state.json')
   let ignoredPackages = atom.config.get('atom-package-deps.ignored') || []
 
-  if (await FS.exists(oldConfigPath)) {
-    const oldConfig = JSON.parse(await FS.readFile(oldConfigPath, 'utf8'))
+  if (await fs.exists(oldConfigPath)) {
+    const oldConfig = JSON.parse(await fs.readFile(oldConfigPath, 'utf8'))
     atom.config.set('atom-package-deps.ignored', (ignoredPackages = oldConfig.ignored))
-    await FS.unlink(oldConfigPath)
+    await fs.unlink(oldConfigPath)
   }
 
   if (ignoredPackages.includes(packageName)) {
