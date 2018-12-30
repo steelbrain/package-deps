@@ -46,9 +46,12 @@ export function apmInstall(
         'false',
       ])
         .then(function(output) {
-          const successful =
-            VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
-          progressCallback(dep.name, successful)
+          let successful = VALIDATION_REGEXP.test(output.stdout)
+          if (successful) {
+            const match = VALIDATION_REGEXP.exec(output.stdout)
+            successful = match && VALID_TICKS.has(match[2])
+          }
+          progressCallback(dep.name, !!successful)
           if (!successful) {
             const error = new Error(`Error installing dependency: ${dep.name}`)
             error.stack = output.stderr
@@ -123,7 +126,9 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
 
         const manifest = JSON.parse(await fs.readFile(Path.join(resolvedPath, 'package.json')))
         // $FlowIgnore: Flow is paranoid, this parsed.version is NOT NULL
-        if (semver.satisfies(manifest.version, `>=${version}`)) return null
+        if (semver.satisfies(manifest.version, `>=${version}`)) {
+          return null
+        }
       }
       __steelbrain_package_deps.add(name)
 
