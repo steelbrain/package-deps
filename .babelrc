@@ -1,4 +1,11 @@
 {
-  "presets": "steelbrain",
-  "plugins": ["for-of-efficient"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": { "node": 6 }
+      }
+    ],
+    "@babel/preset-flow"
+  ]
 }

@@ -2,14 +2,11 @@
 /* eslint-disable global-require */
 
 import Path from 'path'
-import { wait } from 'jasmine-fix'
-import { it } from './helpers'
+import { it, wait } from 'jasmine-fix'
 
 describe('Main Module', function() {
   function uninstallPackage(name) {
-    return atom.packages.uninstallDirectory(
-      Path.join(atom.packages.getPackageDirPaths().pop(), name),
-    )
+    return atom.packages.uninstallDirectory(Path.join(atom.packages.getPackageDirPaths().pop(), name))
   }
   function getPackage(name) {
     // eslint-disable-next-line import/no-dynamic-require

@@ -31,23 +31,35 @@ function exec(command: string, parameters: Array<string>): Promise<{ stdout: str
   })
 }
 
-export function apmInstall(dependencies: Array<Dependency>, progressCallback: ((packageName: string, status: boolean) => void)): Promise<Map<string, Error>> {
+export function apmInstall(
+  dependencies: Array<Dependency>,
+  progressCallback: (packageName: string, status: boolean) => void,
+): Promise<Map<string, Error>> {
   const errors = new Map()
-  return Promise.all(dependencies.map(function(dep) {
-    return exec(atom.packages.getApmPath(), ['install', dep.version ? `${dep.url}@${dep.version}` : dep.url, '--production', '--color', 'false'])
-      .then(function(output) {
-        const successful = VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
-        progressCallback(dep.name, successful)
-        if (!successful) {
-          const error = new Error(`Error installing dependency: ${dep.name}`)
-          error.stack = output.stderr
-          throw error
-        }
-      })
-      .catch(function(error) {
-        errors.set(dep.name, error)
-      })
-  })).then(function() {
+  return Promise.all(
+    dependencies.map(function(dep) {
+      return exec(atom.packages.getApmPath(), [
+        'install',
+        dep.version ? `${dep.url}@${dep.version}` : dep.url,
+        '--production',
+        '--color',
+        'false',
+      ])
+        .then(function(output) {
+          const successful =
+            VALIDATION_REGEXP.test(output.stdout) && VALID_TICKS.has(VALIDATION_REGEXP.exec(output.stdout)[2])
+          progressCallback(dep.name, successful)
+          if (!successful) {
+            const error = new Error(`Error installing dependency: ${dep.name}`)
+            error.stack = output.stderr
+            throw error
+          }
+        })
+        .catch(function(error) {
+          errors.set(dep.name, error)
+        })
+    }),
+  ).then(function() {
     return errors
   })
 }
@@ -94,7 +106,7 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
 
   if (await FS.exists(oldConfigPath)) {
     const oldConfig = JSON.parse(await FS.readFile(oldConfigPath, 'utf8'))
-    atom.config.set('atom-package-deps.ignored', ignoredPackages = oldConfig.ignored)
+    atom.config.set('atom-package-deps.ignored', (ignoredPackages = oldConfig.ignored))
     await FS.unlink(oldConfigPath)
   }
 
@@ -112,34 +124,39 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
       icon: 'cloud-download',
       detail: dependencies.map(e => e.name).join(', '),
       description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
-      buttons: [{
-        text: 'Yes',
-        onDidClick: () => {
-          resolve('Yes')
-          notification.dismiss()
+      buttons: [
+        {
+          text: 'Yes',
+          onDidClick: () => {
+            resolve('Yes')
+            notification.dismiss()
+          },
         },
-      }, {
-        text: 'No Thanks',
-        onDidClick: () => {
-          resolve('No')
-          notification.dismiss()
+        {
+          text: 'No Thanks',
+          onDidClick: () => {
+            resolve('No')
+            notification.dismiss()
+          },
         },
-      }, {
-        text: 'Never',
-        onDidClick: () => {
-          ignoredPackages.push(packageName)
-          atom.config.set('atom-package-deps.ignored', ignoredPackages)
-          if (!shownStorageInfo) {
-            shownStorageInfo = true
-            atom.notifications.addInfo('How to reset package-deps memory', {
-              dismissable: true,
-              description: "To modify the list of ignored files invoke 'Application: Open Your Config' and change the 'atom-package-deps' section",
-            })
-          }
-          resolve('Never')
-          notification.dismiss()
+        {
+          text: 'Never',
+          onDidClick: () => {
+            ignoredPackages.push(packageName)
+            atom.config.set('atom-package-deps.ignored', ignoredPackages)
+            if (!shownStorageInfo) {
+              shownStorageInfo = true
+              atom.notifications.addInfo('How to reset package-deps memory', {
+                dismissable: true,
+                description:
+                  "To modify the list of ignored files invoke 'Application: Open Your Config' and change the 'atom-package-deps' section",
+              })
+            }
+            resolve('Never')
+            notification.dismiss()
+          },
         },
-      }],
+      ],
     })
     notification.onDidDismiss(() => resolve('No'))
   })
