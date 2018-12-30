@@ -105,7 +105,7 @@ describe('Main Module', function() {
     })
 
     expect(atom.packages.getActivePackage(packageName)).not.toBeDefined()
-    await getPackage('some-package/index-hardcoded-name').activate()
+    await getPackage('some-package').activate()
     expect(atom.packages.getActivePackage(packageName)).toBeDefined()
     await uninstallPackage(packageName)
 
@@ -115,7 +115,7 @@ describe('Main Module', function() {
   })
 
   it('stays silent when that package name is not found in active packages', async function() {
-    await getPackage('some-package/index-hardcoded-name').activate()
+    await getPackage('some-package').activate()
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(0)
   })
