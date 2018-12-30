@@ -1,43 +1,102 @@
 version: 2
+
+defaults: &defaults
+  working_directory: /tmp/project
+  docker:
+    - image: arcanemagus/atom-docker-ci:stable
+  steps:
+    # Restore project state
+    - attach_workspace:
+        at: /tmp
+    - run:
+        name: Create VFB for Atom to run in
+        command: /usr/local/bin/xvfb_start
+    - run:
+        name: Atom version
+        command: ${ATOM_SCRIPT_PATH} --version
+    - run:
+        name: APM version
+        command: ${APM_SCRIPT_PATH} --version
+    - run:
+        name: Package APM package dependencies
+        command: |
+          if [ -n "${APM_TEST_PACKAGES}" ]; then
+            for pack in ${APM_TEST_PACKAGES}; do
+            ${APM_SCRIPT_PATH} install "${pack}"
+            done
+          fi;
+    - run:
+        name: Package dependencies
+        command: ${APM_SCRIPT_PATH} install
+    - run:
+        name: Cleaning package
+        command: ${APM_SCRIPT_PATH} clean
+    - run:
+        name: Package specs
+        command: ${ATOM_SCRIPT_PATH} --test spec
+    # Cache node_modules
+    - save_cache:
+        paths:
+          - node_modules
+        key: v2-dependencies-{{ checksum "package.json" }}
+
 jobs:
-  build:
-    working_directory: /tmp/project
-    environment:
-      # Required:
-      DISPLAY: ":99"
-      # Configurable
-      ATOM_LINT_WITH_BUNDLED_NODE: "true"
-      APM_TEST_PACKAGES: ""
-      ATOM_CHANNEL: "stable"
-    # Machine Setup
-    # The following configuration line tells CircleCI to use the specified
-    # docker image as the runtime environment for your job.
-    # For more information on choosing an image (or alternatively using a
-    # VM instead of a container) see https://circleci.com/docs/2.0/executor-types/
-    # To see the list of pre-built images that CircleCI provides for most common
-    # languages see https://circleci.com/docs/2.0/circleci-images/
+  checkout_code:
+    <<: *defaults
     docker:
-    - image: circleci/node:latest
+      - image: circleci/node:latest
     steps:
-    - checkout
-    - run:
-        name: Update system package lists
-        command: sudo apt-get update
-    - run:
-        name: Install some pre-requisite packages
-        command: sudo apt-get --assume-yes --quiet install curl xvfb
-    - run:
-        name: Start display server for Atom
-        command: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x16 +extension RANDR
-        background: true
-    - run:
-        name: Download Atom build script
-        command: curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
-    - run:
-        name: Make build script executable
-        command: chmod u+x build-package.sh
-    - run:
-        name: Run package tests
-        command: ./build-package.sh
-    # On MacOS:
-    # - run: caffeinate -s build-package.sh
+      - checkout
+      # Restore node_modules from the last build
+      - restore_cache:
+          keys:
+          # Get latest cache for this package.json
+          - v2-dependencies-{{ checksum "package.json" }}
+          # Fallback to the last available cache
+          - v2-dependencies
+      # Save project state for next steps
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - project
+  lint:
+    <<: *defaults
+    docker:
+      - image: circleci/node:latest
+    steps:
+      # Restore project state
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Node.js Version
+          command: node --version
+      - run:
+          name: NPM Version
+          command: npm --version
+      - run:
+          name: Install any remaining dependencies
+          command: npm ci
+      - run:
+          name: Lint code
+          command: npm run lint
+  stable:
+    <<: *defaults
+  beta:
+    <<: *defaults
+    docker:
+      - image: arcanemagus/atom-docker-ci:beta
+
+workflows:
+  version: 2
+  test_package:
+    jobs:
+      - checkout_code
+      - lint:
+          requires:
+            - checkout_code
+      - stable:
+          requires:
+            - lint
+      - beta:
+          requires:
+            - lint
