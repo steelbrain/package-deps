@@ -3,7 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "targets": { "node": 6 }
+        "targets": { "electron": 2 }
       }
     ],
     "@babel/preset-flow"

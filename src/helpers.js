@@ -62,7 +62,7 @@ export function apmInstall(
 }
 
 const DEPENDENCY_REGEX_VERSION = /(.*?):.*/
-const DEPENDENCY_REGEX_GIT = /(.*?)#.*/
+const DEPENDENCY_REGEX_GIRURL = /(.*?)#.*/
 export async function getDependencies(packageName: string): Promise<Array<Dependency>> {
   const packageModule = atom.packages.getLoadedPackage(packageName)
   const packageDependencies = packageModule && packageModule.metadata['package-deps']
@@ -77,16 +77,12 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
       let name = entry
       let version = null
 
-      if (DEPENDENCY_REGEX_VERSION.test(entry)) {
-        const match = DEPENDENCY_REGEX_VERSION.exec(entry)
-        if (match) {
-          ;[, name, version] = match
-        }
-      } else if (DEPENDENCY_REGEX_GIT.test(entry)) {
-        const match = DEPENDENCY_REGEX_GIT.exec(entry)
-        if (match) {
-          ;[, name, url] = match
-        }
+      const matchVersion = DEPENDENCY_REGEX_VERSION.exec(entry)
+      const matchGiturl = DEPENDENCY_REGEX_GIRURL.exec(entry)
+      if (matchVersion) {
+        ;[, name, version] = matchVersion
+      } else if (matchGiturl) {
+        ;[, name, url] = matchGiturl
       } else {
         name = entry
       }
