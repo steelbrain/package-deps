@@ -1,6 +1,6 @@
 {
   "name": "atom-package-deps",
-  "version": "4.6.2",
+  "version": "5.0.0",
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
   "scripts": {
