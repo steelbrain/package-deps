@@ -11,6 +11,8 @@ describe('Main Module', function() {
   atom.packages.packageDirPaths.push(
     path.join(process.env.ATOM_HOME || path.join(fs.getHomeDirectory(), '.atom'), 'packages'),
   )
+  // The default timeout of 6 seconds is quite often too slow, bump it to 100 seconds
+  jasmine.getEnv().defaultTimeoutInterval = 100 * 1000
 
   function uninstallPackage(name) {
     return atom.packages.uninstallDirectory(path.join(atom.packages.getPackageDirPaths().pop(), name))
@@ -63,6 +65,7 @@ describe('Main Module', function() {
     await wait(50)
 
     const notifications = atom.notifications.getNotifications()
+    console.log('notifications', notifications)
     expect(notifications.length).toBe(2)
     expect(notifications[1].type).toBe('warning')
   })
