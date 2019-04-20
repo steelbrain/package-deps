@@ -1,12 +1,19 @@
 /* @flow */
 /* eslint-disable global-require */
 
-import Path from 'path'
+import fs from 'fs'
+import path from 'path'
 import { it, wait } from 'jasmine-fix'
 
 describe('Main Module', function() {
+  // Atom sets the path to a random one, so when we install using APM, tests fail.
+  // We add the real one to make the tests work.
+  atom.packages.packageDirPaths.push(
+    path.join(process.env.ATOM_HOME || path.join(fs.getHomeDirectory(), '.atom'), 'packages'),
+  )
+
   function uninstallPackage(name) {
-    return atom.packages.uninstallDirectory(Path.join(atom.packages.getPackageDirPaths().pop(), name))
+    return atom.packages.uninstallDirectory(path.join(atom.packages.getPackageDirPaths().pop(), name))
   }
   function getPackage(name) {
     // eslint-disable-next-line import/no-dynamic-require
