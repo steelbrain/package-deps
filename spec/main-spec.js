@@ -24,7 +24,7 @@ describe('Main Module', function() {
 
   it('works as a whole', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageName = 'hydrogen'
+    const packageName = 'auto-semicolon'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
         return {
@@ -65,7 +65,6 @@ describe('Main Module', function() {
     await wait(50)
 
     const notifications = atom.notifications.getNotifications()
-    console.log('notifications', notifications)
     expect(notifications.length).toBe(2)
     expect(notifications[1].type).toBe('warning')
   })
