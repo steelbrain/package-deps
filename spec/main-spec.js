@@ -1,12 +1,21 @@
 /* @flow */
 /* eslint-disable global-require */
 
-import Path from 'path'
+import fs from 'fs'
+import path from 'path'
 import { it, wait } from 'jasmine-fix'
 
 describe('Main Module', function() {
+  // Atom sets the path to a random one, so when we install using APM, tests fail.
+  // We add the real one to make the tests work.
+  atom.packages.packageDirPaths.push(
+    path.join(process.env.ATOM_HOME || path.join(fs.getHomeDirectory(), '.atom'), 'packages'),
+  )
+  // The default timeout of 6 seconds is quite often too slow, bump it to 100 seconds
+  jasmine.getEnv().defaultTimeoutInterval = 100 * 1000
+
   function uninstallPackage(name) {
-    return atom.packages.uninstallDirectory(Path.join(atom.packages.getPackageDirPaths().pop(), name))
+    return atom.packages.uninstallDirectory(path.join(atom.packages.getPackageDirPaths().pop(), name))
   }
   function getPackage(name) {
     // eslint-disable-next-line import/no-dynamic-require
@@ -62,7 +71,7 @@ describe('Main Module', function() {
 
   it('can install multiple packages at once', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageNameFirst = 'atom-idle-autosave'
+    const packageNameFirst = 'scroll-through-time'
     const packageNameSecond = 'glow'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
@@ -91,7 +100,7 @@ describe('Main Module', function() {
 
   it('works with hardcoded package names', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageName = 'atom-bracket-highlight'
+    const packageName = 'hey-pane'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
         return {
