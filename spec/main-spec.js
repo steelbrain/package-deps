@@ -15,7 +15,7 @@ describe('Main Module', function() {
 
   it('works as a whole', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageName = 'auto-semicolon'
+    const packageName = 'hydrogen'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
         return {
@@ -62,7 +62,7 @@ describe('Main Module', function() {
 
   it('can install multiple packages at once', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageNameFirst = 'atom-idle-autosave'
+    const packageNameFirst = 'scroll-through-time'
     const packageNameSecond = 'glow'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
@@ -91,7 +91,7 @@ describe('Main Module', function() {
 
   it('works with hardcoded package names', async function() {
     const _ = atom.packages.getLoadedPackage
-    const packageName = 'atom-bracket-highlight'
+    const packageName = 'hey-pane'
     spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
       if (name === 'some-package') {
         return {
