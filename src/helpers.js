@@ -2,7 +2,7 @@
 
 import fs from 'sb-fs'
 import Path from 'path'
-import semver from 'semver'
+import semverSatisfies from 'semver/functions/satisfies'
 import { BufferedProcess } from 'atom'
 import type { Dependency } from './types'
 
@@ -99,7 +99,7 @@ export async function getDependencies(packageName: string): Promise<Array<Depend
 
         const manifest = JSON.parse(await fs.readFile(Path.join(resolvedPath, 'package.json')))
         // $FlowIgnore: Flow is paranoid, this parsed.version is NOT NULL
-        if (semver.satisfies(manifest.version, `>=${version}`)) {
+        if (semverSatisfies(manifest.version, `>=${version}`)) {
           return null
         }
       }
