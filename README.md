@@ -2,7 +2,9 @@
 
 Atom-Package-Deps is a module that lets your atom package depend on other atom packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
 
-#### How it works?
+## How it works?
+
+### In `package.json`
 
 You need to have an array of package deps in your package manifest, like
 
@@ -34,6 +36,8 @@ If you need to install specific version of a package, you can add the minimum re
 }
 ```
 
+### In `activate()`
+
 Because the package installation is async, it returns a promise that resolves when all the dependencies have been installed.
 
 ```js
@@ -51,7 +55,7 @@ module.exports = {
 }
 ```
 
-#### Faster load with Dynamic Loading
+### Faster load with Dynamic Loading
 To improve the loading time of your package, you can use `atom-package-deps` only for the first time that your package is installed.
 
 This prevents loading of `package-deps` every time the `activate` function is called. For that, use `atom-package-deps` to install dependencies only if your dependencies are not already loaded in Atom:
