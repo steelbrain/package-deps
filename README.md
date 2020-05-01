@@ -51,6 +51,37 @@ module.exports = {
 }
 ```
 
+#### Faster load with Dynamic Loading
+To improve the loading time of your package, you can use `atom-package-deps` only for the first time that your package is installed.
+
+This prevents loading of `package-deps` every time the `activate` function is called. For that, use `atom-package-deps` to install dependencies only if your dependencies are not already loaded in Atom:
+```js
+// check if the dependencies are not loaded
+ if (!(
+   atom.packages.isPackageLoaded("atom-ide-markdown-service") &&
+   atom.packages.isPackageLoaded("busy-signal")
+ )) {
+   // install dependencies only if not already loaded
+   import("atom-package-deps").then((atom_package_deps) => {
+     atom_package_deps.install('atom-ide-datatip');
+   })
+ }
+```
+
+The above syntax with dynamic `import` works with TypeScript, Rollup, Babel, etc. You can use `require` too:
+```js
+// check if the dependencies are not loaded
+ if (!(
+   atom.packages.isPackageLoaded("atom-ide-markdown-service") &&
+   atom.packages.isPackageLoaded("busy-signal")
+ )) {
+   // install dependencies only if not already loaded
+   require("atom-package-deps").then((atom_package_deps) => {
+     atom_package_deps.install('atom-ide-datatip');
+   })
+ }
+```
+
 #### API
 
 ```js
