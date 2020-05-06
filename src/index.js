@@ -1,10 +1,7 @@
 /* @flow */
 
 import invariant from 'assert'
-
-import * as Helpers from './helpers'
-import View from './view'
-import type { Dependency } from './types'
+import { getDependencies } from './check'
 
 if (typeof window.__steelbrain_package_deps === 'undefined') {
   window.__steelbrain_package_deps = new Set()
