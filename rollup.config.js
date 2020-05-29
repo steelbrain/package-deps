@@ -1,14 +1,11 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import peerexternal from 'rollup-plugin-peer-deps-external'
-// import nodePolyfills from 'rollup-plugin-node-polyfills'
 import babel from 'rollup-plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 
 const plugins = [
   babel(),
-
-  // nodePolyfills(), // bundle path, fs
 
   peerexternal({
     includeDependencies: false,
