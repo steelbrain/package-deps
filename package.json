@@ -12,8 +12,8 @@
     "debug": "sb-babel-cli src -o lib",
     "watch": "npm run debug -- -w",
     "clean": "shx rm -rf lib",
-    "dev": "npm run clean && NODE_ENV=development BABEL_ENV=production rollup -c -w",
-    "build": "npm run clean && NODE_ENV=production BABEL_ENV=production rollup -c",
+    "dev": "npm run clean && env NODE_ENV=development env BABEL_ENV=production rollup -c -w",
+    "build": "npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c",
     "prepare": "npm run build"
   },
   "repository": {
