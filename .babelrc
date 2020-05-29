@@ -3,9 +3,11 @@
     [
       "@babel/preset-env",
       {
-        "targets": { "electron": 2 }
+        "targets": { "electron": 5 }
       }
     ],
     "@babel/preset-flow"
-  ]
+  ],
+  "exclude": "node_modules/**",
+  "sourceMaps": "inline",
 }
