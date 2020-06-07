@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.0.0
+
+- Fix progress bar on newer Atom versions
+- Use rollup to bundle dependencies to decrease load times (Thanks @aminya)
+
+While there's no API breaking change, the distribution format and internal code has changed signficiantly enough that it
+MAY have some bugs left despite our testing. Therefore, to not break existing expectations, I (@steelbrain) am pushing this
+out as semver-major.
+
 ## 5.0.1
 
 - Upgrade dependencies
