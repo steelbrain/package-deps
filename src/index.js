@@ -17,7 +17,7 @@ async function installDependencies(packageName: string, shouldPromptUser: boolea
 
   // Prompt user
   if (shouldPromptUser) {
-    let choice
+    let choice: 'Yes' | 'No' | 'Never' = 'Yes'
     await import('./prompt').then(async ({ promptUser }) => {
       choice = await promptUser(packageName, dependencies)
     })

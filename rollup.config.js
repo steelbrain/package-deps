@@ -39,6 +39,6 @@ export default [
     ],
     // loaded externally
     external: ['atom'],
-    plugins: plugins,
+    plugins,
   },
 ]

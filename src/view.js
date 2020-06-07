@@ -16,12 +16,12 @@ export class View {
       detail: `Installing ${dependencies.map((item) => item.name).join(', ')}`,
       dismissable: true,
     })
-    const progress: Object = document.createElement('progress')
+    const progress = document.createElement('progress')
     this.dispose = function () {
       notification.dismiss()
     }
     this.advance = function () {
-      progress.value++
+      progress.value += 1
     }
     progress.max = dependencies.length
     progress.style.width = '100%'
@@ -48,10 +48,10 @@ export class View {
       return
     }
     const packages = []
-    for (const [packageName, error] of errors) {
+    errors.forEach((error, packageName) => {
       packages.push(`  • ${packageName}`)
       console.error(`[Package-Deps] Unable to install ${packageName}, Error:`, (error && error.stack) || error)
-    }
+    })
     atom.notifications.addWarning(`Failed to install ${this.name} dependencies`, {
       detail: `These packages were not installed, check your console\nfor more info.\n${packages.join('\n')}`,
       dismissable: true,
