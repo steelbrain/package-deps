@@ -26,7 +26,10 @@ export class View {
     progress.max = dependencies.length
     progress.style.width = '100%'
     try {
-      const notificationView = atom.views.getView(notification)
+      let notificationView = atom.views.getView(notification)
+      if (notificationView != null && notificationView.element != null) {
+        notificationView = notificationView.element
+      }
       const notificationContent =
         notificationView.querySelector('.detail-content') || notificationView.querySelector('.content')
       if (notificationContent) {
