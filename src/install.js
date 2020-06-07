@@ -58,7 +58,7 @@ function apmInstall(
   })
 }
 
-export async function performInstall(packageName, dependencies): Promise[] {
+export async function performInstall(packageName, dependencies): Promise {
   const view = new View(packageName, dependencies)
   const errors = await apmInstall(dependencies, function() {
     view.advance()
@@ -71,5 +71,5 @@ export async function performInstall(packageName, dependencies): Promise[] {
     }
     promises.push(atom.packages.activatePackage(dependency.name))
   }
-  return promises
+  return Promise.all(promises)
 }

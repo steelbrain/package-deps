@@ -18,7 +18,7 @@ async function installDependencies(packageName: string, shouldPromptUser: boolea
   // Prompt user
   if (shouldPromptUser) {
     let choice
-    import('./prompt').then(async ({ promptUser }) => {
+    await import('./prompt').then(async ({ promptUser }) => {
       choice = await promptUser(packageName, dependencies)
     })
 
@@ -27,13 +27,10 @@ async function installDependencies(packageName: string, shouldPromptUser: boolea
     }
   }
 
-  let promises
-  import('./install').then(async ({ performInstall }) => {
+  await import('./install').then(async ({ performInstall }) =>
     // Perform Installation
-    promises = await performInstall(packageName, dependencies)
-  })
-
-  await Promise.all(promises)
+    performInstall(packageName, dependencies),
+  )
 }
 
 export { installDependencies as install }
