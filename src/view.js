@@ -2,7 +2,7 @@
 
 import type { Dependency } from './types'
 
-export default class View {
+export class View {
   name: string
   advance: () => void
   dispose: () => void
