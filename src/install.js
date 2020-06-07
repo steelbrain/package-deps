@@ -8,7 +8,7 @@ const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
 function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const data = { stdout: [], stderr: [] }
     const spawnedProcess = new BufferedProcess({
       command,
@@ -34,9 +34,9 @@ function apmInstall(
 ): Promise<Map<string, Error>> {
   const errors = new Map()
   return Promise.all(
-    dependencies.map(function(dep) {
+    dependencies.map(function (dep) {
       return exec(atom.packages.getApmPath(), ['install', dep.url || dep.name, '--production', '--color', 'false'])
-        .then(function(output) {
+        .then(function (output) {
           let successful = VALIDATION_REGEXP.test(output.stdout)
           if (successful) {
             const match = VALIDATION_REGEXP.exec(output.stdout)
@@ -49,18 +49,18 @@ function apmInstall(
             throw error
           }
         })
-        .catch(function(error) {
+        .catch(function (error) {
           errors.set(dep.name, error)
         })
     }),
-  ).then(function() {
+  ).then(function () {
     return errors
   })
 }
 
 export async function performInstall(packageName, dependencies): Promise {
   const view = new View(packageName, dependencies)
-  const errors = await apmInstall(dependencies, function() {
+  const errors = await apmInstall(dependencies, function () {
     view.advance()
   })
   const promises = []

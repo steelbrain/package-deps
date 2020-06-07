@@ -1,6 +1,6 @@
 /* @flow */
 
 export type Dependency = {
-  url: string,
+  url: ?string,
   name: string,
 }

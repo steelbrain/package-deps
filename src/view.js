@@ -13,14 +13,14 @@ export class View {
     this.dependencies = dependencies
 
     const notification = atom.notifications.addInfo(`Installing ${name} dependencies`, {
-      detail: `Installing ${dependencies.map(item => item.name).join(', ')}`,
+      detail: `Installing ${dependencies.map((item) => item.name).join(', ')}`,
       dismissable: true,
     })
     const progress: Object = document.createElement('progress')
-    this.dispose = function() {
+    this.dispose = function () {
       notification.dismiss()
     }
-    this.advance = function() {
+    this.advance = function () {
       progress.value++
     }
     progress.max = dependencies.length
@@ -40,7 +40,7 @@ export class View {
     this.dispose()
     if (!errors.size) {
       atom.notifications.addSuccess(`Installed ${this.name} dependencies`, {
-        detail: `Installed ${this.dependencies.map(item => item.name).join(', ')}`,
+        detail: `Installed ${this.dependencies.map((item) => item.name).join(', ')}`,
       })
       return
     }

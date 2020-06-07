@@ -24,11 +24,11 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
     console.warn(`Enable notifications to install dependencies for ${packageName}`)
   }
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const notification = atom.notifications.addInfo(`${packageName} needs to install dependencies`, {
       dismissable: true,
       icon: 'cloud-download',
-      detail: dependencies.map(e => e.name).join(', '),
+      detail: dependencies.map((e) => e.name).join(', '),
       description: `Install dependenc${dependencies.length === 1 ? 'y' : 'ies'}?`,
       buttons: [
         {
@@ -48,8 +48,11 @@ export async function promptUser(packageName: string, dependencies: Array<Depend
         {
           text: 'Never',
           onDidClick: () => {
+            // Reload, in case it may have changed:
+            ignoredPackages = atom.config.get('atom-package-deps.ignored') || []
             ignoredPackages.push(packageName)
             atom.config.set('atom-package-deps.ignored', ignoredPackages)
+
             if (!shownStorageInfo) {
               shownStorageInfo = true
               atom.notifications.addInfo('How to reset package-deps memory', {
