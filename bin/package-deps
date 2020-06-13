@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const {program} = require('commander')
+const {installByPath} = require('../lib/index.js')
+
+program.version('6.0.0')
+
+program
+    .option('-d, --directory <directory>',
+        'Root of the atom package or link to its package.json',
+        '.')
+
+program.parse(process.argv)
+
+
+installByPath(program.directory)
