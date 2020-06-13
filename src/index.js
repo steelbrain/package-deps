@@ -4,8 +4,8 @@ import invariant from 'assert'
 import path from 'path'
 import { getDependencies } from './check'
 
-if (typeof window.__steelbrain_package_deps === 'undefined') {
-  window.__steelbrain_package_deps = new Set()
+if (typeof global.__steelbrain_package_deps === 'undefined') {
+  global.__steelbrain_package_deps = new Set()
 }
 
 async function installDependencies(packageName: string, shouldPromptUser: boolean = true): Promise<void> {
