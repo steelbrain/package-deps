@@ -2,7 +2,10 @@
 
 Atom-Package-Deps is a module that lets your atom package depend on other atom packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
 
-#### How it works?
+## Usage
+There are two ways two use package-deps:
+
+### Inside your Atom package
 
 You need to have an array of package deps in your package manifest, like
 
@@ -51,10 +54,49 @@ module.exports = {
 }
 ```
 
-#### API
+### Using command line
+This is useful if you want to install the dependencies only once (during your package installation or inside CI)
 
+1) installation as a dependency:
+    ```json
+      "dependencies": {
+        "atom-package-deps": "^6.1.0"
+      },
+    ```
+    Now, you can use `package-deps` in your scripts entry of `package-json`
+    ```json
+      "scripts": {
+        "prepare": "package-deps"
+      },
+    ```
+    Via `prepare`, during your package installation, its dependencies are installed automatically.
+
+2) global installation:
+    ```
+    install atom-package-deps -g
+    ```
+    
+    Now, `package-deps` will be available from any command line:
+    ```
+    package-deps -d .
+    ```
+
+
+#### API
 ```js
 export function install(packageName, showPrompt = true)
+export function installByPath(packagePath)
+```
+
+Command line:
+```
+> package-deps -h
+Usage: package-deps [options]
+
+Options:
+  -V, --version                output the version number
+  -d, --directory <directory>  Root of the atom package or link to its package.json (default: ".")
+  -h, --help                   display help for command
 ```
 
 #### Screenshots
