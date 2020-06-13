@@ -1,6 +1,7 @@
 /* @flow */
 
 import invariant from 'assert'
+import path from 'path'
 import { getDependencies } from './check'
 
 if (typeof window.__steelbrain_package_deps === 'undefined') {
@@ -33,6 +34,18 @@ async function installDependencies(packageName: string, shouldPromptUser: boolea
   )
 }
 
-export { installDependencies as install }
+
+function installByPath(packagePath: string): void {
+  let packageJSONPath = packagePath
+  if (!packagePath.endsWith('package.json')){
+    packageJSONPath = path.join(packagePath, 'package.json')
+  }
+  import('./install-by-path').then( ({ getDependenciesByPath, apmInstallByPath }) => {
+    const dependencies = getDependenciesByPath(packageJSONPath)
+    apmInstallByPath(dependencies)
+  })
+}
+
+export { installDependencies as install, installByPath}
 
 // dynamic import doc: https://rollupjs.org/guide/en/#dynamic-import
