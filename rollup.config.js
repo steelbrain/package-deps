@@ -38,7 +38,7 @@ export default [
       },
     ],
     // loaded externally
-    external: ['atom'],
+    external: ['atom', 'shelljs'],
     plugins,
   },
 ]

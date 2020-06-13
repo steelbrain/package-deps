@@ -29,7 +29,9 @@
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
     "sb-fs": "^4.0.0",
-    "semver": "^7.3.2"
+    "semver": "^7.3.2",
+    "shelljs": "^0.8.4",
+    "commander": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
