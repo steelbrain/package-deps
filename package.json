@@ -37,6 +37,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-typescript": "^5.0.2",
     "@types/atom": "^1.40.4",
     "@types/jasmine": "^3.5.10",
     "@types/semver": "^7.2.0",

@@ -1,14 +1,14 @@
+import typescript from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from 'rollup-plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 
 const plugins = [
+  typescript(),
   babel(),
-
   // so Rollup can find externals
-  resolve({ extensions: ['.js'], preferBuiltins: true }),
-
+  resolve({ extensions: ['.ts'], preferBuiltins: true }),
   // so Rollup can convert externals to an ES module
   commonjs(),
 ]
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
 
 export default [
   {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: [
       {
         dir: 'lib',
