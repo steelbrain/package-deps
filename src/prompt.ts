@@ -1,5 +1,3 @@
-/* @flow */
-
 import Path from 'path'
 import fs from 'sb-fs'
 import type { Dependency } from './types'

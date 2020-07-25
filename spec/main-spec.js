@@ -1,11 +1,10 @@
-/* @flow */
 /* eslint-disable global-require */
 
 import fs from 'fs'
 import path from 'path'
 import { it, wait } from 'jasmine-fix'
 
-describe('Main Module', function() {
+describe('Main Module', function () {
   // Atom sets the path to a random one, so when we install using APM, tests fail.
   // We add the real one to make the tests work.
   atom.packages.packageDirPaths.push(
@@ -22,10 +21,10 @@ describe('Main Module', function() {
     return require(`./fixtures/packages/${name}`)
   }
 
-  it('works as a whole', async function() {
+  it('works as a whole', async function () {
     const _ = atom.packages.getLoadedPackage
     const packageName = 'auto-semicolon'
-    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
+    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function (name) {
       if (name === 'some-package') {
         return {
           metadata: {
@@ -47,9 +46,9 @@ describe('Main Module', function() {
     expect(notifications[0].type).toBe('info')
   })
 
-  it('handles errors pretty good', async function() {
+  it('handles errors pretty good', async function () {
     const _ = atom.packages.getLoadedPackage
-    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
+    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function (name) {
       if (name === 'some-package') {
         return {
           metadata: {
@@ -69,11 +68,11 @@ describe('Main Module', function() {
     expect(notifications[1].type).toBe('warning')
   })
 
-  it('can install multiple packages at once', async function() {
+  it('can install multiple packages at once', async function () {
     const _ = atom.packages.getLoadedPackage
     const packageNameFirst = 'scroll-through-time'
     const packageNameSecond = 'glow'
-    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
+    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function (name) {
       if (name === 'some-package') {
         return {
           metadata: {
@@ -98,10 +97,10 @@ describe('Main Module', function() {
     expect(notifications[0].type).toBe('info')
   })
 
-  it('works with hardcoded package names', async function() {
+  it('works with hardcoded package names', async function () {
     const _ = atom.packages.getLoadedPackage
     const packageName = 'hey-pane'
-    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function(name) {
+    spyOn(atom.packages, 'getLoadedPackage').andCallFake(function (name) {
       if (name === 'some-package') {
         return {
           metadata: {
@@ -123,7 +122,7 @@ describe('Main Module', function() {
     expect(notifications[0].type).toBe('info')
   })
 
-  it('stays silent when that package name is not found in active packages', async function() {
+  it('stays silent when that package name is not found in active packages', async function () {
     await getPackage('some-package').activate()
     const notifications = atom.notifications.getNotifications()
     expect(notifications.length).toBe(0)

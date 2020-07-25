@@ -1,5 +1,3 @@
-/* @flow */
-
 import type { Dependency } from './types'
 
 export class View {

@@ -1,5 +1,3 @@
-/* @flow */
-
 import fs from 'sb-fs'
 import Path from 'path'
 import semverSatisfies from 'semver/functions/satisfies'

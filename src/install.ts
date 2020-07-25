@@ -1,5 +1,3 @@
-/* @flow */
-
 import { BufferedProcess } from 'atom'
 import type { Dependency } from './types'
 import { View } from './view'
@@ -7,7 +5,7 @@ import { View } from './view'
 const VALID_TICKS = new Set(['✓', 'done'])
 const VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 
-function exec(command: string, parameters: Array<string>): Promise<{ stdout: string, stderr: string }> {
+function exec(command: string, parameters: Array<string>): Promise<{ stdout: string; stderr: string }> {
   return new Promise(function (resolve) {
     const data = { stdout: [], stderr: [] }
     const spawnedProcess = new BufferedProcess({

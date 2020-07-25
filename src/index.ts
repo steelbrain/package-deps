@@ -1,5 +1,3 @@
-/* @flow */
-
 import invariant from 'assert'
 import { getDependencies } from './check'
 
