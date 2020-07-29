@@ -44,6 +44,7 @@ module.exports = {
     // replace the example argument 'linter-ruby' with the name of this Atom package
     require('atom-package-deps')
       .install('linter-ruby')
+      // ^ NOTE: This is the name of YOUR package, NOT the package you want to install.
       .then(function() {
         console.log('All dependencies installed, good to go')
       })
@@ -73,4 +74,4 @@ Installation Complete
 
 #### License
 
-This project is licensed under the terms of MIT license, See the license file or contact me for more info.
+This project is licensed under the terms of MIT license, See the LICENSE file for more info.

@@ -127,7 +127,7 @@ Thanks to @joelbarker2011 for helping out with his PRs!
 ## 2.1.2
 
 - Fix progress bar for multiple dependencies
-- Invoke apm just one time even for multiple dependenciesx
+- Invoke apm just one time even for multiple dependencies
 
 ## 2.1.1
 
