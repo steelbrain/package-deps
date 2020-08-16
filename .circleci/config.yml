@@ -9,19 +9,16 @@ jobs:
       - restore_cache:
           name: Restore Npm Package Cache
           keys:
-            - npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - npm-packages-{{ .Branch }}
-            - npm-packages-master
-            - npm-packages-
+            - npm-packages-v1
       - run:
           name: Packager Version
           command: npm --version
       - run:
           name: Install Dependencies
-          command: npm install
+          command: NODE_ENV=development npm install && npm run postinstall && npm run prepare
       - save_cache:
           name: Save Npm Package Cache
-          key: npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: npm-packages-v1
           paths:
             - node_modules/
       - run:
