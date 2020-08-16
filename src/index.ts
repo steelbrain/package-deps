@@ -1,5 +1,7 @@
 import pFilter from 'p-filter'
-import { invariant, getDependencies, resolveDependencyPath, shouldInstallDependency } from './helpers'
+
+import { confirmPackagesToInstall } from './view'
+import { invariant, isPackageIgnored, getDependencies, resolveDependencyPath, shouldInstallDependency } from './helpers'
 import { DependencyResolved } from './types'
 
 type DependenciesResolved = (DependencyResolved | DependencyResolved[])[]
@@ -12,6 +14,11 @@ export async function install({
   showPrompt?: boolean
 }): Promise<void> {
   invariant(typeof packageName === 'string' && packageName.length > 0, '[Package-Deps] Package name is required')
+
+  if (isPackageIgnored(packageName)) {
+    // User ignored this package
+    return
+  }
 
   // Get list of relevant dependencies
   const dependencies = await getDependencies(packageName)
@@ -46,5 +53,10 @@ export async function install({
     return shouldInstallDependency(item)
   })
 
-  console.log('dependenciesToInstall', dependenciesToInstall)
+  const chosenDependencies = await confirmPackagesToInstall({
+    packageName,
+    dependencies: dependenciesToInstall,
+  })
+
+  console.log('dependenciesToInstall', chosenDependencies)
 }

@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
   "dependencies": {
+    "@steelbrain/spawn": "^0.2.0",
+    "escape-html": "^1.0.3",
     "p-filter": "^2.1.0",
     "semver": "^7.3.2"
   },
@@ -38,6 +40,7 @@
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@types/atom": "^1.40.4",
+    "@types/escape-html": "^1.0.0",
     "@types/jasmine": "^3.5.10",
     "@types/semver": "^7.3.2",
     "flow-bin": "^0.126.1",

@@ -1,6 +1,7 @@
+import { spawn } from '@steelbrain/spawn'
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { IS_ATOM, IS_DEV } from '../constants'
+import { IS_ATOM, IS_DEV, IGNORED_CONFIG_NAME } from '../constants'
 import { DependencyResolved, Dependency } from '../types'
 
 import {
@@ -13,6 +14,10 @@ import {
   resolveDependencyPath as resolveDependencyPathNode,
   getInstalledDependencyVersion as getInstalledDependencyVersionNode,
 } from './node'
+
+/**
+ * Internal helpers
+ */
 
 const versionInRangeCache: Map<string, boolean> = new Map()
 function versionInRange({ version, range }: { version: string; range: string }): boolean {
@@ -41,7 +46,9 @@ async function getInstalledDependencyVersion(dependency: DependencyResolved): Pr
   return getInstalledDependencyVersionNode(dependency)
 }
 
-/* Exported stuff */
+/**
+ * Exported helpers
+ */
 
 export const resolveDependencyPath: (name: string) => Promise<string | null> = IS_ATOM
   ? resolveDependencyPathAtom
@@ -69,6 +76,7 @@ export async function getDependencies(name: string): Promise<(Dependency | Depen
             invalidMessage,
           )
         })
+        invariant(item.length > 0, `Dependency#${index} for ${name} has no group items`)
       } else {
         const invalidMessage = `Dependency#${index} for ${name} is invalid`
         invariant(typeof item.name === 'string' && item.name.length > 0, invalidMessage)
@@ -101,4 +109,60 @@ export async function shouldInstallDependency(dependency: DependencyResolved) {
     version,
     range: dependency.version,
   })
+}
+
+export function isPackageIgnored(name: string): boolean {
+  if (!IS_ATOM) {
+    // Never ignored in CLI
+    return false
+  }
+
+  const ignoredPackages = atom.config.get(IGNORED_CONFIG_NAME) ?? []
+  if (ignoredPackages.includes(name)) {
+    return true
+  }
+
+  // If Atom "notifications" package is disabled, treat the whole thing as ignored
+  if (atom.packages.isPackageDisabled('notifications')) {
+    console.warn(`Enable notifications to install dependencies for ${name}`)
+    return true
+  }
+
+  return false
+}
+
+export function markPackageAsIgnored(name: string): void {
+  if (!IS_ATOM) {
+    // No op in CLI
+    return
+  }
+  const ignoredPackages = new Set(atom.config.get(IGNORED_CONFIG_NAME) ?? [])
+  ignoredPackages.add(name)
+  atom.config.set(IGNORED_CONFIG_NAME, Array.from(ignoredPackages))
+}
+
+const INSTALL_VALID_TICKS = new Set(['✓', 'done'])
+const INSTALL_VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
+// Example success output: Uninstalling linter-ui-default ✓
+export async function installPackage(dependency: Dependency): Promise<void> {
+  const apmPath = IS_ATOM ? atom.packages.getApmPath() : 'apm'
+
+  const { stdout, stderr } = await spawn(apmPath, [
+    'install',
+    dependency.version ? `${dependency.name}@${dependency.version}` : dependency.name,
+    '--production',
+    '--color',
+    'false',
+  ])
+  console.log('contents', { stdout, stderr })
+
+  const match = INSTALL_VALIDATION_REGEXP.exec(stdout.trim())
+  if (match != null && INSTALL_VALID_TICKS.has(match[2])) {
+    // Installation complete and verified
+    return
+  }
+
+  const error = new Error(`Error installing dependency: ${dependency.name}`)
+  error.stack = stderr.trim()
+  throw error
 }
