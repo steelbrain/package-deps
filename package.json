@@ -10,7 +10,8 @@
     "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
     "clean": "rm -rf lib",
     "dev": "npm run clean && env NODE_ENV=development env BABEL_ENV=production rollup -c -w",
-    "prepare": "npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c"
+    "prepare": "npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
