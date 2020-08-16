@@ -103,7 +103,7 @@ export function confirmPackagesToInstall({
         select.innerHTML = item.map((subitem) => `<option>${escapeHtml(subitem.name)}</option>`).join('\n')
         select.addEventListener('change', () => {
           // Change the selected value for this index for resolve to use
-          const subitem = item.find((subitem) => subitem.name === select.value)
+          const subitem = item.find((entry) => entry.name === select.value)
           if (subitem != null) {
             groupChoices[index] = subitem
           }
@@ -119,7 +119,17 @@ export function confirmPackagesToInstall({
   })
 }
 
-export function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
+export function getView({
+  packageName,
+  dependencies,
+}: {
+  packageName: string
+  dependencies: Dependency[]
+}): {
+  handleFailure: (args: { dependency: Dependency; error: Error }) => void
+  handleDependencyInstalled: (dependency: Dependency) => void
+  handleComplete: () => void
+} {
   const failed: string[] = []
   const notification = atom.notifications.addInfo(`Installing ${packageName} dependencies`, {
     detail: `Installing ${dependencies.map((item) => item.name).join(', ')}`,
@@ -172,6 +182,7 @@ export function getView({ packageName, dependencies }: { packageName: string; de
           if (!failed.includes(item.name)) {
             return atom.packages.activatePackage(item.name)
           }
+          return null
         }),
       ).catch((err) => {
         console.error(`[Package-Deps] Error activating installed packages for ${packageName}`, err)

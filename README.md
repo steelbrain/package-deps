@@ -32,7 +32,7 @@ module.exports = {
   activate() {
     // replace the example argument 'linter-ruby' with the name of this Atom package
     require('atom-package-deps')
-      .install({ packageName: 'linter-ruby' })
+      .install('linter-ruby')
       // ^ NOTE: This is the name of YOUR package, NOT the package you want to install.
       .then(function() {
         console.log('All dependencies installed, good to go')
@@ -44,7 +44,7 @@ module.exports = {
 #### API
 
 ```js
-export function install({ packageName, showPrompt }: { packageName: string; showPrompt?: boolean })
+export function install(packageName: string)
 ```
 
 #### Screenshots

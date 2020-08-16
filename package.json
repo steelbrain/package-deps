@@ -4,14 +4,13 @@
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
   "files": [
-    "lib/**/*"
+    "lib/*"
   ],
   "scripts": {
-    "lint": "(eslint .) && (flow check) && (prettier --list-different src/*.js)",
-    "test": "apm test",
+    "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
     "clean": "rm -rf lib",
     "dev": "npm run clean && env NODE_ENV=development env BABEL_ENV=production rollup -c -w",
-    "build": "npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c"
+    "prepare": "npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c"
   },
   "repository": {
     "type": "git",
@@ -39,16 +38,14 @@
     "@babel/preset-typescript": "^7.10.4",
     "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-commonjs": "^13.0.0",
-    "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^8.4.0",
     "@types/atom": "^1.40.4",
     "@types/escape-html": "^1.0.0",
     "@types/jasmine": "^3.5.10",
     "@types/semver": "^7.3.2",
-    "flow-bin": "^0.126.1",
-    "jasmine-fix": "^1.3.1",
+    "eslint-config-steelbrain": "^10.0.0-beta2",
     "patch-package": "^6.2.2",
-    "prettier": "^2.0.5",
-    "rollup": "^2.14.0",
+    "rollup": "^2.26.2",
     "typescript": "^3.9.7"
   }
 }

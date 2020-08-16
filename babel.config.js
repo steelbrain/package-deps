@@ -8,6 +8,4 @@ module.exports = {
     ],
     '@babel/preset-typescript',
   ],
-  exclude: 'node_modules/**',
-  sourceMaps: 'inline',
 }

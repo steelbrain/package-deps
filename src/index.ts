@@ -14,13 +14,7 @@ import { DependencyResolved } from './types'
 
 type DependenciesResolved = (DependencyResolved | DependencyResolved[])[]
 
-export async function install({
-  packageName,
-  showPrompt = true,
-}: {
-  packageName: string
-  showPrompt?: boolean
-}): Promise<void> {
+export async function install(packageName: string): Promise<void> {
   invariant(typeof packageName === 'string' && packageName.length > 0, '[Package-Deps] Package name is required')
 
   if (isPackageIgnored(packageName)) {

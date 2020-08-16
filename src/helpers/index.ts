@@ -54,7 +54,7 @@ export const resolveDependencyPath: (name: string) => Promise<string | null> = I
   ? resolveDependencyPathAtom
   : resolveDependencyPathNode
 
-export function invariant(condition: boolean, message?: string) {
+export function invariant(condition: boolean, message?: string): void {
   if (!condition) {
     throw new Error(message ?? 'Invariant violation')
   }
@@ -88,7 +88,7 @@ export async function getDependencies(name: string): Promise<(Dependency | Depen
   return dependencies
 }
 
-export async function shouldInstallDependency(dependency: DependencyResolved) {
+export async function shouldInstallDependency(dependency: DependencyResolved): Promise<boolean> {
   if (dependency.directory == null) {
     // Not installed, so install
     return true

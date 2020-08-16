@@ -1,18 +1,6 @@
 {
   "extends": "steelbrain",
   "rules": {
-    "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/member-delimiter-style": "off",
-    "prettier/prettier": "off",
-    "no-underscore-dangle": "off",
-    "import/prefer-default-export": "off",
-    "import/no-unresolved": ["error", {
-      "ignore": ["atom"]
-    }]
-  },
-  "globals": {
-    "atom": true,
-    "BufferedProcess": true,
-    "__steelbrain_package_deps": true
+    "import/prefer-default-export": "off"
   }
 }

@@ -9,17 +9,17 @@ export default [
       {
         dir: 'lib',
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: false,
       },
     ],
-    external: ['atom'],
+    external: ['child_process', 'os', 'path', 'fs', 'semver/functions/satisfies', 'escape-html', 'p-map', 'p-filter'],
     plugins: [
+      commonjs(),
       babel({
         extensions: ['.ts'],
         babelHelpers: 'bundled',
       }),
       resolve({ extensions: ['.ts'], preferBuiltins: true }),
-      commonjs(),
     ],
   },
 ]
