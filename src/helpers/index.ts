@@ -154,7 +154,6 @@ export async function installPackage(dependency: Dependency): Promise<void> {
     '--color',
     'false',
   ])
-  console.log('contents', { stdout, stderr })
 
   const match = INSTALL_VALIDATION_REGEXP.exec(stdout.trim())
   if (match != null && INSTALL_VALID_TICKS.has(match[2])) {

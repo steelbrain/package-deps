@@ -120,7 +120,7 @@ export function confirmPackagesToInstall({
 }
 
 export function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
-  const failed: Dependency[] = []
+  const failed: string[] = []
   const notification = atom.notifications.addInfo(`Installing ${packageName} dependencies`, {
     detail: `Installing ${dependencies.map((item) => item.name).join(', ')}`,
     dismissable: true,
@@ -147,7 +147,7 @@ export function getView({ packageName, dependencies }: { packageName: string; de
 
   return {
     handleFailure({ dependency, error }: { dependency: Dependency; error: Error }): void {
-      failed.push(dependency)
+      failed.push(dependency.name)
 
       console.error(`[Package-Deps] Unable to install ${dependency.name}, Error:`, error?.stack ?? error)
     },
@@ -166,6 +166,16 @@ export function getView({ packageName, dependencies }: { packageName: string; de
           detail: `Installed ${dependencies.map((item) => item.name).join(', ')}`,
         })
       }
+
+      Promise.all(
+        dependencies.map((item) => {
+          if (!failed.includes(item.name)) {
+            return atom.packages.activatePackage(item.name)
+          }
+        }),
+      ).catch((err) => {
+        console.error(`[Package-Deps] Error activating installed packages for ${packageName}`, err)
+      })
     },
   }
 }
