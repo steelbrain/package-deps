@@ -84,22 +84,21 @@ export function confirmPackagesToInstall({
       // Add list of ungroup dependencies to the top of the notification
       if (ungroupedDependencies.length > 0) {
         const ungroupedLine = document.createElement('div')
-        ungroupedLine.classList.add('line')
-        ungroupedLine.innerHTML = `Packages without choices: <br />- ${ungroupedDependencies
+        ungroupedLine.innerHTML = `Packages without choices: <br /><ul><li>${ungroupedDependencies
           .map((item) => escapeHtml(item.version ? `${item.name}@${item.version}` : item.name))
-          .join('<br />- ')}`
+          .join('</li><li>')}</li></ul>`
         notificationContent.appendChild(ungroupedLine)
       }
 
       // Create a label line for groups
       const groupLabelLine = document.createElement('div')
-      groupLabelLine.classList.add('line')
-      groupLabelLine.innerHTML = `Packages with choices: <br />`
+      groupLabelLine.innerHTML = `Packages with choices:`
       notificationContent.appendChild(groupLabelLine)
 
       // Create one line per group with a select inside
+      const groupedList = document.createElement('ul')
       groupedDependencies.forEach((item, index) => {
-        const line = document.createElement('div')
+        const listItem = document.createElement('li')
         const select = document.createElement('select')
         select.innerHTML = item.map((subitem) => `<option>${escapeHtml(subitem.name)}</option>`).join('\n')
         select.addEventListener('change', () => {
@@ -109,10 +108,11 @@ export function confirmPackagesToInstall({
             groupChoices[index] = subitem
           }
         })
-        line.classList.add('line')
-        line.appendChild(select)
-        notificationContent.appendChild(line)
+        listItem.style.marginTop = '5px'
+        listItem.appendChild(select)
+        groupedList.appendChild(listItem)
       })
+      notificationContent.appendChild(groupedList)
     } catch (err) {
       console.error('[Package-Deps] Error during showing package choices to user', err)
     }
