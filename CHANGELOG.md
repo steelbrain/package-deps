@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0
+
+- **BREAKING** Change function signature to get rid of `promptUser`
+- **BREAKING** Change format of `package-deps` in manifest from `"my-name:my-version"` to be `{ "name": "my-name", "version": "my-version" }`
+- Add support for optional/group packages where users only have to install one of many, and are given a choice at runtime. Signature becomes `Dependency[][]` instead of `Dependency[]`
+- Add support for using through CLI for CI and similar purposes
+
 ## 6.0.0
 
 - Fix progress bar on newer Atom versions
