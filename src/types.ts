@@ -1,9 +1,8 @@
 export interface Dependency {
   name: string
-  version?: string
+  version?: string | null
 }
 
-export interface Helpers {
-  getDependencies(name: string): Promise<(Dependency | Dependency[])[]>
-  resolveDependencyPath(name: string): Promise<string | null>
+export interface DependencyResolved extends Dependency {
+  directory: string | null
 }

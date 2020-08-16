@@ -10,27 +10,16 @@ You need to have an array of package deps in your package manifest, like
 {
   "name": "linter-ruby",
   ...
-  "package-deps": ["linter"]
+  "package-deps": [{ "name": "linter" }]
 }
 ```
-
-If you need to install package deps from a source other than https://atom.io, suffix a `#` character followed by a git remote (in any format supported by `apm install`):
-
-```js
-{
-  "name": "linter-ruby",
-  ...
-  "package-deps": ["linter#steelbrain/linter"]
-}
-```
-
 If you need to install specific version of a package, you can add the minimum required version to the package name (semver doesn't work!), like this
 
 ```js
 {
   "name": "linter-ruby",
   ...
-  "package-deps": ["linter:2.0.0"]
+  "package-deps": [{ "name": "linter", "version": "2.0.0" }]
 }
 ```
 
@@ -43,7 +32,7 @@ module.exports = {
   activate() {
     // replace the example argument 'linter-ruby' with the name of this Atom package
     require('atom-package-deps')
-      .install('linter-ruby')
+      .install({ packageName: 'linter-ruby' })
       // ^ NOTE: This is the name of YOUR package, NOT the package you want to install.
       .then(function() {
         console.log('All dependencies installed, good to go')
@@ -55,7 +44,7 @@ module.exports = {
 #### API
 
 ```js
-export function install(packageName, showPrompt = true)
+export function install({ packageName, showPrompt }: { packageName: string; showPrompt?: boolean })
 ```
 
 #### Screenshots
