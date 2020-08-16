@@ -13,13 +13,20 @@ You need to have an array of package deps in your package manifest, like
   "package-deps": [{ "name": "linter" }]
 }
 ```
-If you need to install specific version of a package, you can add the minimum required version to the package name (semver doesn't work!), like this
+
+You can also specify the minimum required version (version not semver-range!) of the package, or give users a choice by specifying multiple ones.
 
 ```js
 {
   "name": "linter-ruby",
   ...
-  "package-deps": [{ "name": "linter", "version": "2.0.0" }]
+  "package-deps": [
+    // Add a dependency on a package:
+    { "name": "linter", "minimumVersion": "2.0.0" },
+    // Add a depdencny in any of the following packages,
+    // so if one is already installed, user is not prompted to install the other
+    [ { "name": "linter" }, { "name": "atom-ide-ui" } ]
+  ]
 }
 ```
 

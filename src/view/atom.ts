@@ -17,7 +17,7 @@ export function confirmPackagesToInstall({
 
     const skipGroups = groupedDependencies.length === 0
     const detail = skipGroups
-      ? ungroupedDependencies.map((item) => (item.version ? `${item.name}@${item.version}` : item.name)).join(', ')
+      ? ungroupedDependencies.map((item) => item.name).join(', ')
       : 'Something went wrong. Check your developer console'
     const groupChoices = groupedDependencies.map((item) => item[0])
 
@@ -85,7 +85,7 @@ export function confirmPackagesToInstall({
       if (ungroupedDependencies.length > 0) {
         const ungroupedLine = document.createElement('div')
         ungroupedLine.innerHTML = `Packages without choices: <br /><ul><li>${ungroupedDependencies
-          .map((item) => escapeHtml(item.version ? `${item.name}@${item.version}` : item.name))
+          .map((item) => escapeHtml(item.name))
           .join('</li><li>')}</li></ul>`
         notificationContent.appendChild(ungroupedLine)
       }

@@ -1,5 +1,5 @@
 import { spawn } from '@steelbrain/spawn'
-import semverSatisfies from 'semver/functions/satisfies'
+import semverCompare from 'semver-compare'
 
 import { IS_ATOM, IS_DEV, IGNORED_CONFIG_NAME } from '../constants'
 import { DependencyResolved, Dependency } from '../types'
@@ -18,20 +18,6 @@ import {
 /**
  * Internal helpers
  */
-
-const versionInRangeCache: Map<string, boolean> = new Map()
-function versionInRange({ version, range }: { version: string; range: string }): boolean {
-  const cacheKey = `$${version}$${range}`
-  const cached = versionInRangeCache.get(cacheKey)
-
-  if (cached != null) {
-    return cached
-  }
-  const matches = semverSatisfies(version, range)
-  versionInRangeCache.set(cacheKey, matches)
-
-  return matches
-}
 
 async function getInstalledDependencyVersion(dependency: DependencyResolved): Promise<string | null> {
   if (IS_ATOM) {
@@ -72,7 +58,8 @@ export async function getDependencies(name: string): Promise<(Dependency | Depen
           const invalidMessage = `Dependency#${index}#${subindex} for ${name} is invalid`
           invariant(typeof subitem.name === 'string' && subitem.name.length > 0, invalidMessage)
           invariant(
-            subitem.version == null || (typeof subitem.version === 'string' && subitem.version.length > 0),
+            subitem.minimumVersion == null ||
+              (typeof subitem.minimumVersion === 'string' && subitem.minimumVersion.length > 0),
             invalidMessage,
           )
         })
@@ -80,7 +67,10 @@ export async function getDependencies(name: string): Promise<(Dependency | Depen
       } else {
         const invalidMessage = `Dependency#${index} for ${name} is invalid`
         invariant(typeof item.name === 'string' && item.name.length > 0, invalidMessage)
-        invariant(item.version == null || (typeof item.version === 'string' && item.version.length > 0), invalidMessage)
+        invariant(
+          item.minimumVersion == null || (typeof item.minimumVersion === 'string' && item.minimumVersion.length > 0),
+          invalidMessage,
+        )
       }
     })
   }
@@ -93,7 +83,7 @@ export async function shouldInstallDependency(dependency: DependencyResolved): P
     // Not installed, so install
     return true
   }
-  if (dependency.version == null) {
+  if (dependency.minimumVersion == null) {
     // Already installed and no version defined, so skip
     return false
   }
@@ -105,10 +95,7 @@ export async function shouldInstallDependency(dependency: DependencyResolved): P
     return true
   }
 
-  return !versionInRange({
-    version,
-    range: dependency.version,
-  })
+  return semverCompare(dependency.minimumVersion, version) === 1
 }
 
 export function isPackageIgnored(name: string): boolean {
@@ -149,7 +136,7 @@ export async function installPackage(dependency: Dependency): Promise<void> {
 
   const { stdout, stderr } = await spawn(apmPath, [
     'install',
-    dependency.version ? `${dependency.name}@${dependency.version}` : dependency.name,
+    `${dependency.name}@latest`,
     '--production',
     '--color',
     'false',

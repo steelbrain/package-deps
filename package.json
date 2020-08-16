@@ -30,7 +30,7 @@
     "escape-html": "^1.0.3",
     "p-filter": "^2.1.0",
     "p-map": "^4.0.0",
-    "semver": "^7.3.2"
+    "semver-compare": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
@@ -41,8 +41,7 @@
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@types/atom": "^1.40.4",
     "@types/escape-html": "^1.0.0",
-    "@types/jasmine": "^3.5.10",
-    "@types/semver": "^7.3.2",
+    "@types/semver-compare": "^1.0.1",
     "eslint-config-steelbrain": "^10.0.0-beta2",
     "patch-package": "^6.2.2",
     "rollup": "^2.26.2",

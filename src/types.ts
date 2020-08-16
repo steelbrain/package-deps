@@ -1,6 +1,6 @@
 export interface Dependency {
   name: string
-  version?: string | null
+  minimumVersion?: string | null
 }
 
 export interface DependencyResolved extends Dependency {
