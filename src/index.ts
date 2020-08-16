@@ -1,6 +1,6 @@
 import pFilter from 'p-filter'
 import { invariant, getDependencies, resolveDependencyPath, shouldInstallDependency } from './helpers'
-import { Dependency, DependencyResolved } from './types'
+import { DependencyResolved } from './types'
 
 type DependenciesResolved = (DependencyResolved | DependencyResolved[])[]
 
@@ -45,4 +45,6 @@ export async function install({
     }
     return shouldInstallDependency(item)
   })
+
+  console.log('dependenciesToInstall', dependenciesToInstall)
 }

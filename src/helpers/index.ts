@@ -1,6 +1,6 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { IS_ATOM } from '../constants'
+import { IS_ATOM, IS_DEV } from '../constants'
 import { DependencyResolved, Dependency } from '../types'
 
 import {
@@ -28,9 +28,7 @@ function versionInRange({ version, range }: { version: string; range: string }):
   return matches
 }
 
-const getInstalledDependencyVersion: (dependency: DependencyResolved) => Promise<string | null> = async function (
-  dependency: DependencyResolved,
-) {
+async function getInstalledDependencyVersion(dependency: DependencyResolved): Promise<string | null> {
   if (IS_ATOM) {
     const atomPackageVersion = await getInstalledDependencyVersionAtom(dependency)
 
@@ -45,9 +43,6 @@ const getInstalledDependencyVersion: (dependency: DependencyResolved) => Promise
 
 /* Exported stuff */
 
-export const getDependencies: (name: string) => Promise<(Dependency | Dependency[])[]> = IS_ATOM
-  ? getDependenciesAtom
-  : getDependenciesNode
 export const resolveDependencyPath: (name: string) => Promise<string | null> = IS_ATOM
   ? resolveDependencyPathAtom
   : resolveDependencyPathNode
@@ -56,6 +51,33 @@ export function invariant(condition: boolean, message?: string) {
   if (!condition) {
     throw new Error(message ?? 'Invariant violation')
   }
+}
+
+export async function getDependencies(name: string): Promise<(Dependency | Dependency[])[]> {
+  const dependencies = await (IS_ATOM ? getDependenciesAtom(name) : getDependenciesNode(name))
+
+  if (IS_DEV) {
+    invariant(Array.isArray(dependencies), `Dependencies for ${name} are not a valid array`)
+
+    dependencies.forEach((item, index) => {
+      if (Array.isArray(item)) {
+        item.forEach((subitem, subindex) => {
+          const invalidMessage = `Dependency#${index}#${subindex} for ${name} is invalid`
+          invariant(typeof subitem.name === 'string' && subitem.name.length > 0, invalidMessage)
+          invariant(
+            subitem.version == null || (typeof subitem.version === 'string' && subitem.version.length > 0),
+            invalidMessage,
+          )
+        })
+      } else {
+        const invalidMessage = `Dependency#${index} for ${name} is invalid`
+        invariant(typeof item.name === 'string' && item.name.length > 0, invalidMessage)
+        invariant(item.version == null || (typeof item.version === 'string' && item.version.length > 0), invalidMessage)
+      }
+    })
+  }
+
+  return dependencies
 }
 
 export async function shouldInstallDependency(dependency: DependencyResolved) {
