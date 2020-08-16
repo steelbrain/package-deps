@@ -12,14 +12,14 @@ export default [
         sourcemap: false,
       },
     ],
-    external: ['child_process', 'os', 'path', 'fs', 'semver/functions/satisfies', 'escape-html', 'p-map', 'p-filter'],
+    external: ['child_process', 'os', 'path', 'fs'],
     plugins: [
       commonjs(),
       babel({
         extensions: ['.ts'],
         babelHelpers: 'bundled',
       }),
-      resolve({ extensions: ['.ts'], preferBuiltins: true }),
+      resolve({ extensions: ['.ts', '.js'], preferBuiltins: true }),
     ],
   },
 ]
