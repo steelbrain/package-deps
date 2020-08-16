@@ -119,9 +119,53 @@ export function confirmPackagesToInstall({
   })
 }
 
-export default function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
+export function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
+  const failed: Dependency[] = []
+  const notification = atom.notifications.addInfo(`Installing ${packageName} dependencies`, {
+    detail: `Installing ${dependencies.map((item) => item.name).join(', ')}`,
+    dismissable: true,
+  })
+  const progress = document.createElement('progress')
+
+  progress.max = dependencies.length
+  progress.style.width = '100%'
+
+  try {
+    const notificationView = atom.views.getView(notification) as { element?: HTMLElement } | null
+    const notificationElement = notificationView?.element ?? null
+    if (notificationElement == null) {
+      throw new Error('Unable to get notification element from view')
+    }
+    const notificationContent = notificationElement.querySelector('.detail-content')
+    if (notificationContent == null) {
+      throw new Error('Content detail container not found inside the notification')
+    }
+    notificationContent.appendChild(progress)
+  } catch (err) {
+    console.error('[Package-Deps] Error during showing installation progress to user', err)
+  }
+
   return {
-    handleFailure(error: Error): void {},
-    handleDependencyInstalled(dependencyName: string): void {},
+    handleFailure({ dependency, error }: { dependency: Dependency; error: Error }): void {
+      failed.push(dependency)
+
+      console.error(`[Package-Deps] Unable to install ${dependency.name}, Error:`, error?.stack ?? error)
+    },
+    handleDependencyInstalled(dependency: Dependency): void {
+      progress.value += 1
+    },
+    handleComplete() {
+      notification.dismiss()
+      if (failed.length > 0) {
+        atom.notifications.addWarning(`Failed to install ${packageName} dependencies`, {
+          detail: `These packages were not installed, check your console\nfor more info.\n${failed.join('\n')}`,
+          dismissable: true,
+        })
+      } else {
+        atom.notifications.addSuccess(`Installed ${packageName} dependencies`, {
+          detail: `Installed ${dependencies.map((item) => item.name).join(', ')}`,
+        })
+      }
+    },
   }
 }

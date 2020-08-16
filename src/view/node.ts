@@ -10,9 +10,25 @@ export async function confirmPackagesToInstall({
   return dependencies.map((item) => (Array.isArray(item) ? item[0] : item))
 }
 
-export default function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
+export function getView({ packageName, dependencies }: { packageName: string; dependencies: Dependency[] }) {
+  let failed = false
+  console.log(`Installing ${packageName} dependencies:\n${dependencies.map((item) => `  - ${item.name}`).join('\n')}`)
+
   return {
-    handleFailure(error: Error): void {},
-    handleDependencyInstalled(dependencyName: string): void {},
+    handleFailure({ dependency, error }: { dependency: Dependency; error: Error }): void {
+      failed = true
+      console.error(`Unable to install ${dependency.name}, Error:`, error?.stack ?? error)
+    },
+    handleDependencyInstalled(dependency: Dependency): void {
+      console.log('Successfully installed', dependency.name)
+    },
+    handleComplete() {
+      console.log('Installation complete')
+
+      if (failed) {
+        // Fail the invocation
+        process.exitCode = 1
+      }
+    },
   }
 }

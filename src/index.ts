@@ -1,7 +1,15 @@
+import pMap from 'p-map'
 import pFilter from 'p-filter'
 
-import { confirmPackagesToInstall } from './view'
-import { invariant, isPackageIgnored, getDependencies, resolveDependencyPath, shouldInstallDependency } from './helpers'
+import { confirmPackagesToInstall, getView } from './view'
+import {
+  invariant,
+  isPackageIgnored,
+  getDependencies,
+  resolveDependencyPath,
+  shouldInstallDependency,
+  installPackage,
+} from './helpers'
 import { DependencyResolved } from './types'
 
 type DependenciesResolved = (DependencyResolved | DependencyResolved[])[]
@@ -53,10 +61,42 @@ export async function install({
     return shouldInstallDependency(item)
   })
 
+  if (dependenciesToInstall.length === 0) {
+    // Short-circuit if all have been skipped
+    return
+  }
+
   const chosenDependencies = await confirmPackagesToInstall({
     packageName,
     dependencies: dependenciesToInstall,
   })
 
-  console.log('dependenciesToInstall', chosenDependencies)
+  if (chosenDependencies.length === 0) {
+    // Short-circuit if user interaction cancelled all
+    return
+  }
+
+  const view = getView({
+    packageName,
+    dependencies: chosenDependencies,
+  })
+
+  await pMap(
+    chosenDependencies,
+    async function (dependency) {
+      try {
+        await installPackage(dependency)
+        view.handleDependencyInstalled(dependency)
+      } catch (err) {
+        view.handleFailure({
+          dependency,
+          error: err,
+        })
+      }
+    },
+    {
+      concurrency: 2,
+    },
+  )
+  view.handleComplete()
 }
