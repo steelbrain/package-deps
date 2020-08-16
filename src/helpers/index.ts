@@ -131,16 +131,10 @@ export function markPackageAsIgnored(name: string): void {
 const INSTALL_VALID_TICKS = new Set(['✓', 'done'])
 const INSTALL_VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 // Example success output: Uninstalling linter-ui-default ✓
-export async function installPackage(dependency: Dependency): Promise<void> {
+export async function installPackage(dependency: DependencyResolved): Promise<void> {
   const apmPath = IS_ATOM ? atom.packages.getApmPath() : 'apm'
 
-  const { stdout, stderr } = await spawn(apmPath, [
-    'install',
-    `${dependency.name}@latest`,
-    '--production',
-    '--color',
-    'false',
-  ])
+  const { stdout, stderr } = await spawn(apmPath, ['install', dependency.name, '--production', '--color', 'false'])
 
   const match = INSTALL_VALIDATION_REGEXP.exec(stdout.trim())
   if (match != null && INSTALL_VALID_TICKS.has(match[2])) {

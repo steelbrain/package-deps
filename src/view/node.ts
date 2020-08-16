@@ -1,11 +1,11 @@
-import { Dependency } from '../types'
+import { DependencyResolved } from '../types'
 
 export async function confirmPackagesToInstall({
   dependencies,
 }: {
   packageName: string
-  dependencies: (Dependency | Dependency[])[]
-}): Promise<Dependency[]> {
+  dependencies: (DependencyResolved | DependencyResolved[])[]
+}): Promise<DependencyResolved[]> {
   // No user interaction on the CLI. Install the first (aka "default" choice) package
   return dependencies.map((item) => (Array.isArray(item) ? item[0] : item))
 }
@@ -15,21 +15,21 @@ export function getView({
   dependencies,
 }: {
   packageName: string
-  dependencies: Dependency[]
+  dependencies: DependencyResolved[]
 }): {
-  handleFailure: (args: { dependency: Dependency; error: Error }) => void
-  handleDependencyInstalled: (dependency: Dependency) => void
+  handleFailure: (args: { dependency: DependencyResolved; error: Error }) => void
+  handleDependencyInstalled: (dependency: DependencyResolved) => void
   handleComplete: () => void
 } {
   let failed = false
   console.log(`Installing ${packageName} dependencies:\n${dependencies.map((item) => `  - ${item.name}`).join('\n')}`)
 
   return {
-    handleFailure({ dependency, error }: { dependency: Dependency; error: Error }): void {
+    handleFailure({ dependency, error }: { dependency: DependencyResolved; error: Error }): void {
       failed = true
       console.error(`Unable to install ${dependency.name}, Error:`, error?.stack ?? error)
     },
-    handleDependencyInstalled(dependency: Dependency): void {
+    handleDependencyInstalled(dependency: DependencyResolved): void {
       console.log('Successfully installed', dependency.name)
     },
     handleComplete() {

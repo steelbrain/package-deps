@@ -1,6 +1,6 @@
 import escapeHtml from 'escape-html'
 
-import { Dependency } from '../types'
+import { DependencyResolved } from '../types'
 import { markPackageAsIgnored } from '../helpers'
 
 let showResetInstruction = true
@@ -9,11 +9,11 @@ export function confirmPackagesToInstall({
   dependencies,
 }: {
   packageName: string
-  dependencies: (Dependency | Dependency[])[]
-}): Promise<Dependency[]> {
+  dependencies: (DependencyResolved | DependencyResolved[])[]
+}): Promise<DependencyResolved[]> {
   return new Promise((resolve) => {
-    const ungroupedDependencies = dependencies.filter((item) => !Array.isArray(item)) as Dependency[]
-    const groupedDependencies = dependencies.filter((item) => Array.isArray(item)) as Dependency[][]
+    const ungroupedDependencies = dependencies.filter((item) => !Array.isArray(item)) as DependencyResolved[]
+    const groupedDependencies = dependencies.filter((item) => Array.isArray(item)) as DependencyResolved[][]
 
     const skipGroups = groupedDependencies.length === 0
     const detail = skipGroups
@@ -124,10 +124,10 @@ export function getView({
   dependencies,
 }: {
   packageName: string
-  dependencies: Dependency[]
+  dependencies: DependencyResolved[]
 }): {
-  handleFailure: (args: { dependency: Dependency; error: Error }) => void
-  handleDependencyInstalled: (dependency: Dependency) => void
+  handleFailure: (args: { dependency: DependencyResolved; error: Error }) => void
+  handleDependencyInstalled: (dependency: DependencyResolved) => void
   handleComplete: () => void
 } {
   const failed: string[] = []
@@ -156,12 +156,12 @@ export function getView({
   }
 
   return {
-    handleFailure({ dependency, error }: { dependency: Dependency; error: Error }): void {
+    handleFailure({ dependency, error }: { dependency: DependencyResolved; error: Error }): void {
       failed.push(dependency.name)
-
+      progress.value += 1
       console.error(`[Package-Deps] Unable to install ${dependency.name}, Error:`, error?.stack ?? error)
     },
-    handleDependencyInstalled(dependency: Dependency): void {
+    handleDependencyInstalled(dependency: DependencyResolved): void {
       progress.value += 1
     },
     handleComplete() {
