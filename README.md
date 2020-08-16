@@ -10,27 +10,23 @@ You need to have an array of package deps in your package manifest, like
 {
   "name": "linter-ruby",
   ...
-  "package-deps": ["linter"]
+  "package-deps": [{ "name": "linter" }]
 }
 ```
 
-If you need to install package deps from a source other than https://atom.io, suffix a `#` character followed by a git remote (in any format supported by `apm install`):
+You can also specify the minimum required version (version not semver-range!) of the package, or give users a choice by specifying multiple ones.
 
 ```js
 {
   "name": "linter-ruby",
   ...
-  "package-deps": ["linter#steelbrain/linter"]
-}
-```
-
-If you need to install specific version of a package, you can add the minimum required version to the package name (semver doesn't work!), like this
-
-```js
-{
-  "name": "linter-ruby",
-  ...
-  "package-deps": ["linter:2.0.0"]
+  "package-deps": [
+    // Add a dependency on a package:
+    { "name": "linter", "minimumVersion": "2.0.0" },
+    // Add a depdencny in any of the following packages,
+    // so if one is already installed, user is not prompted to install the other
+    [ { "name": "linter" }, { "name": "atom-ide-ui" } ]
+  ]
 }
 ```
 
@@ -44,6 +40,7 @@ module.exports = {
     // replace the example argument 'linter-ruby' with the name of this Atom package
     require('atom-package-deps')
       .install('linter-ruby')
+      // ^ NOTE: This is the name of YOUR package, NOT the package you want to install.
       .then(function() {
         console.log('All dependencies installed, good to go')
       })
@@ -53,8 +50,16 @@ module.exports = {
 
 #### API
 
+You can use this package programatically via this exported interface:
+
 ```js
-export function install(packageName, showPrompt = true)
+export function install(packageName: string)
+```
+
+Alternatively, if you want to install dependencies via CLI, this package exposes a bin for that
+
+```
+Usage: atom-package-deps <directory>
 ```
 
 #### Screenshots
@@ -62,6 +67,10 @@ export function install(packageName, showPrompt = true)
 Installation Prompt
 
 <img src="https://cloud.githubusercontent.com/assets/4278113/22874485/10df8086-f1e8-11e6-8270-9b9823ba07f3.png">
+
+Installation Prompt with choices:
+
+<img src="https://user-images.githubusercontent.com/4278113/90339581-26e49c80-e00b-11ea-9488-fb5d64ee3f28.png">
 
 Installation Progress
 
@@ -73,4 +82,4 @@ Installation Complete
 
 #### License
 
-This project is licensed under the terms of MIT license, See the license file or contact me for more info.
+This project is licensed under the terms of MIT license, See the LICENSE file for more info.

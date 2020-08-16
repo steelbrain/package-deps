@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.0
+
+- **BREAKING** Change function signature to get rid of `promptUser`
+- **BREAKING** Change format of `package-deps` in manifest from `"my-name:my-version"` to be `{ "name": "my-name", "minimumVersion": "my-version" }`
+- **BREAKING** Instead of accepting a semver-range for version, you can now only specify a minimum version in `x.y.z` format, instead of for example `>=2`
+- Add support for optional/group packages where users only have to install one of many, and are given a choice at runtime. Signature becomes `Dependency[][]` instead of `Dependency[]`
+- Add support for using through CLI for CI and similar purposes
+
 ## 6.0.0
 
 - Fix progress bar on newer Atom versions
@@ -127,7 +135,7 @@ Thanks to @joelbarker2011 for helping out with his PRs!
 ## 2.1.2
 
 - Fix progress bar for multiple dependencies
-- Invoke apm just one time even for multiple dependenciesx
+- Invoke apm just one time even for multiple dependencies
 
 ## 2.1.1
 

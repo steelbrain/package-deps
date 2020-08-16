@@ -1,44 +1,41 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel from 'rollup-plugin-babel'
-import { terser } from 'rollup-plugin-terser'
+import babel from '@rollup/plugin-babel'
+import preserveShebang from 'rollup-plugin-preserve-shebang'
 
-const plugins = [
-  babel(),
-
-  // so Rollup can find externals
-  resolve({ extensions: ['.js'], preferBuiltins: true }),
-
-  // so Rollup can convert externals to an ES module
-  commonjs(),
-]
-
-// minify only in production mode
-if (process.env.NODE_ENV === 'production') {
-  plugins.push(
-    // minify
-    terser({
-      ecma: 2018,
-      warnings: true,
-      compress: {
-        drop_console: true,
-      },
+const mainFile = {
+  input: 'src/index.ts',
+  output: {
+    file: 'lib/index.js',
+    format: 'cjs',
+  },
+  external: ['child_process', 'os', 'path', 'fs'],
+  plugins: [
+    commonjs(),
+    preserveShebang(),
+    babel({
+      extensions: ['.ts'],
+      babelHelpers: 'bundled',
     }),
-  )
+    resolve({ extensions: ['.ts', '.js'], preferBuiltins: true }),
+  ],
 }
 
-export default [
-  {
-    input: 'src/index.js',
-    output: [
-      {
-        dir: 'lib',
-        format: 'cjs',
-        sourcemap: true,
-      },
-    ],
-    // loaded externally
-    external: ['atom'],
-    plugins,
+const binFile = {
+  input: 'src/bin.ts',
+  output: {
+    file: 'lib/bin.js',
+    format: 'cjs',
   },
-]
+  external: ['child_process', 'os', 'path', 'fs', './index'],
+  plugins: [
+    commonjs(),
+    preserveShebang(),
+    babel({
+      extensions: ['.ts'],
+      babelHelpers: 'bundled',
+    }),
+  ],
+}
+
+export default [binFile, mainFile]
