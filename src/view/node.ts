@@ -11,7 +11,6 @@ export async function confirmPackagesToInstall({
 }
 
 export function getView({
-  packageName,
   dependencies,
 }: {
   packageName: string
@@ -22,7 +21,7 @@ export function getView({
   handleComplete: () => void
 } {
   let failed = false
-  console.log(`Installing ${packageName} dependencies:\n${dependencies.map((item) => `  - ${item.name}`).join('\n')}`)
+  console.log(`Installing dependencies:\n${dependencies.map((item) => `  - ${item.name}`).join('\n')}`)
 
   return {
     handleFailure({ dependency, error }: { dependency: DependencyResolved; error: Error }): void {

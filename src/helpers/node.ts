@@ -16,8 +16,14 @@ export async function getDependencies(packageName: string): Promise<(Dependency 
     throw new Error(`[Package-Deps] Expected packageName to be a readable directory in Node.js invocation`)
   }
 
-  const contents = await fs.promises.readFile(path.join(packageName, 'package.json'), 'utf8')
-  const packageDependencies = contents == null || typeof contents !== 'object' ? [] : contents['package-deps']
+  let parsed: Record<string, any> | null = null
+  try {
+    const contents = await fs.promises.readFile(path.join(packageName, 'package.json'), 'utf8')
+    parsed = JSON.parse(contents)
+  } catch (_) {
+    // Ignore JSON read errors and such
+  }
+  const packageDependencies = parsed == null || typeof parsed !== 'object' ? [] : parsed['package-deps']
 
   return Array.isArray(packageDependencies) ? packageDependencies : []
 }
