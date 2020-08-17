@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.1
+
+- Fix a dev dependency accidentally slipping into `post-install` script
+
 ## 7.0.0
 
 - **BREAKING** Change function signature to get rid of `promptUser`
