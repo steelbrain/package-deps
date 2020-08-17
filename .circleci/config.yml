@@ -15,7 +15,7 @@ jobs:
           command: npm --version
       - run:
           name: Install Dependencies
-          command: NODE_ENV=development npm install && npm run postinstall && npm run prepare
+          command: NODE_ENV=development npm install && npm run prepare
       - save_cache:
           name: Save Npm Package Cache
           key: npm-packages-v1
