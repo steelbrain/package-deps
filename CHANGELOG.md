@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.2
+
+- Fix a bug where error would be thrown if user already had one of the packages installed (Thanks @lierdakil)
+
 ## 7.0.1
 
 - Fix a dev dependency accidentally slipping into `post-install` script
