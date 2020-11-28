@@ -23,7 +23,7 @@ You can also specify the minimum required version (version not semver-range!) of
   "package-deps": [
     // Add a dependency on a package:
     { "name": "linter", "minimumVersion": "2.0.0" },
-    // Add a depdencny in any of the following packages,
+    // Add a dependency in any of the following packages,
     // so if one is already installed, user is not prompted to install the other
     [ { "name": "linter" }, { "name": "atom-ide-ui" } ]
   ]
