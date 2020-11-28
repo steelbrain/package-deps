@@ -109,12 +109,6 @@ export function isPackageIgnored(name: string): boolean {
     return true
   }
 
-  // If Atom "notifications" package is disabled, treat the whole thing as ignored
-  if (atom.packages.isPackageDisabled('notifications')) {
-    console.warn(`Enable notifications to install dependencies for ${name}`)
-    return true
-  }
-
   return false
 }
 
