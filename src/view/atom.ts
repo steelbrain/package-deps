@@ -21,7 +21,7 @@ export function confirmPackagesToInstall({
       : 'Something went wrong. Check your developer console'
     const groupChoices = groupedDependencies.map((item) => item[0])
 
-    // If Atom "notifications" package is disabled, treat the whole thing as ignored
+    // If Atom "notifications" package is disabled output a warning in case no other notifications package is installed.
     if (atom.packages.isPackageDisabled('notifications')) {
       console.warn(`Enable notifications to install dependencies for ${packageName}`)
     }
