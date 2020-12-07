@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.3
+
+- Fix support for `notifications-plus` package (Thanks @UziTech)
+
 ## 7.0.2
 
 - Fix a bug where error would be thrown if user already had one of the packages installed (Thanks @lierdakil)
