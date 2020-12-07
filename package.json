@@ -1,6 +1,6 @@
 {
   "name": "atom-package-deps",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
   "bin": "./lib/bin.js",
