@@ -53,13 +53,13 @@ module.exports = {
 You can use this package programatically via this exported interface:
 
 ```js
-export function install(packageName: string)
+export function install(packageName: string, shouldPromptUser: boolean = true)
 ```
 
 Alternatively, if you want to install dependencies via CLI, this package exposes a bin for that
 
 ```
-Usage: atom-package-deps <directory>
+Usage: atom-package-deps <directory> <shouldPromptUser = 'true'>
 ```
 
 #### Screenshots
