@@ -14,7 +14,7 @@ import { DependencyResolved } from './types'
 
 type DependenciesResolved = (DependencyResolved | DependencyResolved[])[]
 
-export async function install(packageName: string): Promise<void> {
+export async function install(packageName: string, shouldPromptUser = true): Promise<void> {
   invariant(typeof packageName === 'string' && packageName.length > 0, '[Package-Deps] Package name is required')
 
   if (isPackageIgnored(packageName)) {
@@ -60,10 +60,22 @@ export async function install(packageName: string): Promise<void> {
     return
   }
 
-  const chosenDependencies = await confirmPackagesToInstall({
-    packageName,
-    dependencies: dependenciesToInstall,
-  })
+  let chosenDependencies: DependencyResolved[]
+  if (shouldPromptUser) {
+    chosenDependencies = await confirmPackagesToInstall({
+      packageName,
+      dependencies: dependenciesToInstall,
+    })
+  } else {
+    // prompt-less installation
+    chosenDependencies = dependenciesToInstall.map(dep => {
+      if (Array.isArray(dep)) {
+        return dep[0]
+      }
+      return dep
+    })
+  }
+
 
   if (chosenDependencies.length === 0) {
     // Short-circuit if user interaction cancelled all
