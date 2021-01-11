@@ -6,11 +6,18 @@ if (process.argv.length !== 3) {
   console.error('Usage: atom-package-deps <directory>')
   process.exit(1)
 }
-const [, , directory] = process.argv
+const [, , directory, shouldPromptUserStr] = process.argv
+
+let shouldPromptUser: boolean
+if (!shouldPromptUserStr || shouldPromptUserStr === 'true') {
+  shouldPromptUser = true
+} else {
+  shouldPromptUser = false
+}
 
 async function main() {
   const resolved = path.resolve(process.cwd(), directory)
-  await install(resolved)
+  await install(resolved, shouldPromptUser)
   console.log('All Done!')
 }
 
