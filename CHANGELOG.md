@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.0
+
+- Readd ability to hide user prompt
+
 ## 7.0.3
 
 - Fix support for `notifications-plus` package (Thanks @UziTech)
