@@ -10,8 +10,9 @@
   "scripts": {
     "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
     "clean": "shx rm -rf lib",
+    "tsc": "tsc -p ./tsconfig.json --emitDeclarationOnly",
     "dev": "npm run clean && cross-env NODE_ENV=development cross-env BABEL_ENV=production rollup -c -w",
-    "prepare": "patch-package && npm run clean && cross-env NODE_ENV=production cross-env BABEL_ENV=production rollup -c"
+    "prepare": "patch-package && npm run clean && npm run tsc && cross-env NODE_ENV=production cross-env BABEL_ENV=production rollup -c"
   },
   "repository": {
     "type": "git",
