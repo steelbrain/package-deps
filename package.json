@@ -10,8 +10,8 @@
   "scripts": {
     "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
     "clean": "shx rm -rf lib",
-    "dev": "npm run clean && env NODE_ENV=development env BABEL_ENV=production rollup -c -w",
-    "prepare": "patch-package && npm run clean && env NODE_ENV=production env BABEL_ENV=production rollup -c"
+    "dev": "npm run clean && cross-env NODE_ENV=development cross-env BABEL_ENV=production rollup -c -w",
+    "prepare": "patch-package && npm run clean && cross-env NODE_ENV=production cross-env BABEL_ENV=production rollup -c"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "@types/atom": "^1.40.4",
     "@types/escape-html": "^1.0.0",
     "@types/semver-compare": "^1.0.1",
+    "cross-env": "^7.0.3",
     "escape-html": "^1.0.3",
     "eslint-config-steelbrain": "^10.0.0-beta2",
     "p-filter": "^2.1.0",
