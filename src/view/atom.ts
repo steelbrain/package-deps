@@ -144,6 +144,7 @@ export function getView({
   progress.max = dependencies.length
   progress.style.width = '100%'
 
+  // try adding progress element to the notification
   try {
     const notificationView = atom.views.getView(notification) as { element?: HTMLElement } | null
     const notificationElement = notificationView?.element ?? null
@@ -156,7 +157,7 @@ export function getView({
     }
     notificationContent.appendChild(progress)
   } catch (err) {
-    console.error('[Package-Deps] Error during showing installation progress to user', err)
+    console.warn('[Package-Deps] Error during showing installation progress to user', err)
   }
 
   return {
