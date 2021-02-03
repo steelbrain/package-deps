@@ -140,3 +140,17 @@ export async function installPackage(dependency: DependencyResolved): Promise<vo
   error.stack = stderr.trim()
   throw error
 }
+
+
+export async function getResolvedDependency(item: string | Dependency): Promise<DependencyResolved> {
+  // string entry
+  if (typeof item === 'string') {
+    return { name: item, directory: await resolveDependencyPath(item) }
+  }
+
+  if ('name' in item) {
+    return { ...item, directory: await resolveDependencyPath(item.name) }
+  }
+
+  throw Error("The package-deps entry is not valid")
+}
