@@ -42,6 +42,11 @@ export async function install(packageName: string, hideUserPrompt = false): Prom
         )
       }
 
+      // string entry
+      if (typeof item === 'string') {
+        return { name: item, directory: await resolveDependencyPath(item) }
+      }
+
       return { ...item, directory: await resolveDependencyPath(item.name) }
     }),
   )
