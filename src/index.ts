@@ -6,7 +6,7 @@ import {
   invariant,
   isPackageIgnored,
   getDependencies,
-  resolveDependencyPath,
+  getResolvedDependency,
   shouldInstallDependency,
   installPackage,
 } from './helpers'
@@ -35,14 +35,10 @@ export async function install(packageName: string, hideUserPrompt = false): Prom
     dependencies.map(async (item) => {
       if (Array.isArray(item)) {
         return Promise.all(
-          item.map(async (subitem) => ({
-            ...subitem,
-            directory: await resolveDependencyPath(subitem.name),
-          })),
+          item.map(getResolvedDependency),
         )
       }
-
-      return { ...item, directory: await resolveDependencyPath(item.name) }
+      return getResolvedDependency(item)
     }),
   )
 
