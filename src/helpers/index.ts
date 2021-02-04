@@ -143,7 +143,6 @@ export async function installPackage(dependency: DependencyResolved): Promise<vo
   throw error
 }
 
-
 export async function getResolvedDependency(item: string | Dependency): Promise<DependencyResolved> {
   // string entry
   if (typeof item === 'string') {
@@ -154,6 +153,8 @@ export async function getResolvedDependency(item: string | Dependency): Promise<
     return { ...item, directory: await resolveDependencyPath(item.name) }
   }
 
-  console.error(`This package-deps entry is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`, {entry: item})
+  console.error(`This package-deps entry is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`, {
+    entry: item,
+  })
   throw Error(`The package-deps entry is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`)
 }
