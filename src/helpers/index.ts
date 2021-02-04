@@ -152,6 +152,6 @@ export async function getResolvedDependency(item: string | Dependency): Promise<
     return { ...item, directory: await resolveDependencyPath(item.name) }
   }
 
-  console.error(`The package-deps entry ${JSON.stringify(item)} is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`)
+  console.error(`This package-deps entry is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`, {entry: item})
   throw Error(`The package-deps entry is not valid. Please see https://github.com/steelbrain/package-deps#how-it-works`)
 }
