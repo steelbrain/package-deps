@@ -35,7 +35,7 @@ export async function install(packageName: string, hideUserPrompt = false): Prom
     dependencies.map(async (item) => {
       if (Array.isArray(item)) {
         return Promise.all(
-          item.map(async (subitem) => getResolvedDependency(subitem)),
+          item.map(getResolvedDependency),
         )
       }
       return getResolvedDependency(item)
