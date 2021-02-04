@@ -14,7 +14,7 @@ You need to have an array of package deps in your package manifest, like
 }
 ```
 
-or if only the name of the package is available, you specify the name directly as a string for that entry:
+If only the name of the package is needed, you can specify the name directly as a string instead of an object for that entry:
 ```js
   "package-deps": ["linter"]
 ```
