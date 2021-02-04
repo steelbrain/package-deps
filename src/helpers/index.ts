@@ -128,7 +128,9 @@ const INSTALL_VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 export async function installPackage(dependency: DependencyResolved): Promise<void> {
   const apmPath = IS_ATOM ? atom.packages.getApmPath() : 'apm'
 
-  const { stdout, stderr } = await spawn(apmPath, ['install', dependency.name, '--production', '--color', 'false'])
+  const { stdout, stderr } = await spawn(apmPath, ['install', dependency.name, '--production', '--color', 'false'], {
+    shell: true,
+  })
 
   const match = INSTALL_VALIDATION_REGEXP.exec(stdout.trim())
   if (match != null && INSTALL_VALID_TICKS.has(match[2])) {
