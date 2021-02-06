@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.2.0
+
+- Add Typescript definitions
+- Fix installing dependencies in CI on Windows
+- Allow purely string entries for name in dependencies
+
 ## 7.1.0
 
 - Readd ability to hide user prompt
