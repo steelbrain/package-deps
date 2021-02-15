@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0
+
+- Fix compatibility with Windows usernames with spaces - #331 (Thanks @deankevorkian)
+
 ## 7.2.0
 
 - Add Typescript definitions
