@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.3.0
+## 7.2.1
 
 - Fix compatibility with Windows usernames with spaces - #331 (Thanks @deankevorkian)
 
