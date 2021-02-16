@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.2
+
+- Another attempt to fix Windows usages - #332 (Thanks @UziTech)
+
 ## 7.2.1
 
 - Fix compatibility with Windows usernames with spaces - #331 (Thanks @deankevorkian)
