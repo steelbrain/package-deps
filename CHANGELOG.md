@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.3
+
+- Fix ungrouped dependencies not being installed in no-interaction/skip-groups mode. (Thanks @lierdakil)
+
 ## 7.2.2
 
 - Another attempt to fix Windows usages - #332 (Thanks @UziTech)
