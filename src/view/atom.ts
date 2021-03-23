@@ -35,7 +35,7 @@ export function confirmPackagesToInstall({
           text: 'Yes',
           onDidClick: () => {
             if (skipGroups) {
-              resolve([])
+              resolve(ungroupedDependencies)
             } else {
               resolve(ungroupedDependencies.concat(groupChoices))
             }
