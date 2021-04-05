@@ -1,6 +1,7 @@
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
+import type { AtomEnvironment } from 'atom' // eslint-disable-line import/no-unresolved
 import { Dependency, DependencyResolved } from '../types'
 
 export async function getDependencies(packageName: string): Promise<(Dependency | Dependency[])[]> {
@@ -45,7 +46,7 @@ export async function resolveDependencyPath(packageName: string): Promise<string
  * so we need to install packages in the correct path
  */
 function getAtomHomePath() {
-  return atom.getConfigDirPath() ?? process.env.ATOM_HOME ?? path.join(os.homedir(), '.atom')
+  return (atom as AtomEnvironment | null)?.getConfigDirPath() ?? process.env.ATOM_HOME ?? path.join(os.homedir(), '.atom')
 }
 
 export async function getInstalledDependencyVersion(dependency: DependencyResolved): Promise<string | null> {
