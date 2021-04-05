@@ -29,7 +29,7 @@ export async function getDependencies(packageName: string): Promise<(Dependency 
 }
 
 export async function resolveDependencyPath(packageName: string): Promise<string | null> {
-  const packageDirectory = path.join(process.env.ATOM_HOME ?? path.join(os.homedir(), '.atom'), 'packages', packageName)
+  const packageDirectory = path.join(getAtomHomePath(), 'packages', packageName)
 
   try {
     await fs.promises.access(packageDirectory, fs.constants.R_OK)
@@ -37,6 +37,15 @@ export async function resolveDependencyPath(packageName: string): Promise<string
   } catch (_) {
     return null
   }
+}
+
+/**
+ * Get the atom home which includes `packages` folder.
+ * Test runners such as `atom-jasmine3-runner` change this folder in the test env,
+ * so we need to install packages in the correct path
+ */
+function getAtomHomePath() {
+  return atom.getConfigDirPath() ?? process.env.ATOM_HOME ?? path.join(os.homedir(), '.atom')
 }
 
 export async function getInstalledDependencyVersion(dependency: DependencyResolved): Promise<string | null> {
