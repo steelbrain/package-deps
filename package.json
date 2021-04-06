@@ -12,7 +12,7 @@
     "clean": "shx rm -rf lib",
     "tsc": "tsc -p ./tsconfig.json --emitDeclarationOnly",
     "dev": "npm run clean && cross-env NODE_ENV=development cross-env rollup -c -w",
-    "prepare": "patch-package && npm run clean && npm run tsc && cross-env NODE_ENV=production cross-env rollup -c"
+    "prepare": "npm run clean && npm run tsc && cross-env NODE_ENV=production cross-env rollup -c"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "dependencies": {},
   "devDependencies": {
     "@steelbrain/spawn": "^0.2.0",
-    "@types/atom": "^1.40.4",
+    "@types/atom": "^1.40.10",
     "@types/escape-html": "^1.0.0",
     "@types/semver-compare": "^1.0.1",
     "cross-env": "^7.0.3",
