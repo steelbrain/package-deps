@@ -1,41 +1,26 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import babel from '@rollup/plugin-babel'
 import preserveShebang from 'rollup-plugin-preserve-shebang'
+import { createPlugins } from 'rollup-plugin-atomic'
+
+const plugins = createPlugins([['ts', { tsconfig: './src/tsconfig.json' }, true], 'js'], [preserveShebang()])
 
 const mainFile = {
   input: 'src/index.ts',
   output: {
-    file: 'lib/index.js',
+    dir: './lib',
     format: 'cjs',
   },
-  external: ['child_process', 'os', 'path', 'fs'],
-  plugins: [
-    commonjs(),
-    preserveShebang(),
-    babel({
-      extensions: ['.ts'],
-      babelHelpers: 'bundled',
-    }),
-    resolve({ extensions: ['.ts', '.js'], preferBuiltins: true }),
-  ],
+  external: ['atom'],
+  plugins,
 }
 
 const binFile = {
   input: 'src/bin.ts',
   output: {
-    file: 'lib/bin.js',
+    dir: './lib',
     format: 'cjs',
   },
-  external: ['child_process', 'os', 'path', 'fs', './index'],
-  plugins: [
-    commonjs(),
-    preserveShebang(),
-    babel({
-      extensions: ['.ts'],
-      babelHelpers: 'bundled',
-    }),
-  ],
+  external: ['./index'],
+  plugins,
 }
 
 export default [binFile, mainFile]
