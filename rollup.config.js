@@ -1,7 +1,15 @@
 import preserveShebang from 'rollup-plugin-preserve-shebang'
 import { createPlugins } from 'rollup-plugin-atomic'
 
-const plugins = createPlugins([['ts', { tsconfig: './src/tsconfig.json' }, true], 'js'], [preserveShebang()])
+const plugins = (IS_ATOM) =>
+  createPlugins(
+    [
+      'js',
+      ['ts', { tsconfig: './src/tsconfig.json' }, true],
+      ['replace', { 'process.env.PACKAGE_DEPS_IS_ATOM': IS_ATOM }, true],
+    ],
+    [preserveShebang()],
+  )
 
 const mainFile = {
   input: 'src/index.ts',
@@ -10,7 +18,7 @@ const mainFile = {
     format: 'cjs',
   },
   external: ['atom'],
-  plugins,
+  plugins: plugins('true'),
 }
 
 const binFile = {
@@ -19,8 +27,7 @@ const binFile = {
     dir: './lib',
     format: 'cjs',
   },
-  external: ['./index'],
-  plugins,
+  plugins: plugins('false'),
 }
 
 export default [binFile, mainFile]
