@@ -6,7 +6,7 @@ const plugins = (isAtom) =>
     [
       'js',
       ['ts', { tsconfig: './src/tsconfig.json' }, true],
-      ['replace', { 'process.env.PACKAGE_DEPS_IS_ATOM': isAtom }, true],
+      ['replace', { 'process.env.PACKAGE_DEPS_IS_ATOM': JSON.stringify(isAtom) }, true],
     ],
     [preserveShebang()],
   )
