@@ -1,12 +1,12 @@
 import preserveShebang from 'rollup-plugin-preserve-shebang'
 import { createPlugins } from 'rollup-plugin-atomic'
 
-const plugins = (IS_ATOM) =>
+const plugins = (isAtom) =>
   createPlugins(
     [
       'js',
       ['ts', { tsconfig: './src/tsconfig.json' }, true],
-      ['replace', { 'process.env.PACKAGE_DEPS_IS_ATOM': IS_ATOM }, true],
+      ['replace', { 'process.env.PACKAGE_DEPS_IS_ATOM': isAtom }, true],
     ],
     [preserveShebang()],
   )
