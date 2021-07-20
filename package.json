@@ -11,8 +11,8 @@
     "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
     "clean": "shx rm -rf lib",
     "tsc": "tsc -p ./tsconfig.json --emitDeclarationOnly",
-    "dev": "npm run clean && cross-env NODE_ENV=development cross-env BABEL_ENV=production rollup -c -w",
-    "prepare": "patch-package && npm run clean && npm run tsc && cross-env NODE_ENV=production cross-env BABEL_ENV=production rollup -c"
+    "dev": "npm run clean && cross-env NODE_ENV=development cross-env rollup -c -w",
+    "prepare": "npm run clean && npm run tsc && cross-env NODE_ENV=production cross-env rollup -c"
   },
   "repository": {
     "type": "git",
@@ -27,16 +27,9 @@
     "url": "https://github.com/AtomLinter/package-deps/issues"
   },
   "homepage": "https://github.com/AtomLinter/package-deps#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/preset-typescript": "^7.10.4",
-    "@rollup/plugin-babel": "^5.2.0",
-    "@rollup/plugin-commonjs": "^13.0.0",
-    "@rollup/plugin-node-resolve": "^8.4.0",
     "@steelbrain/spawn": "^0.2.0",
-    "@types/atom": "^1.40.4",
+    "@types/atom": "^1.40.10",
     "@types/escape-html": "^1.0.0",
     "@types/semver-compare": "^1.0.1",
     "cross-env": "^7.0.3",
@@ -44,11 +37,11 @@
     "eslint-config-steelbrain": "^10.0.0-beta2",
     "p-filter": "^2.1.0",
     "p-map": "^4.0.0",
-    "patch-package": "^6.2.2",
-    "rollup": "^2.26.2",
+    "rollup-plugin-atomic": "^2.4.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "semver-compare": "^1.0.0",
     "shx": "^0.3.3",
-    "typescript": "^3.9.7"
+    "terser-config-atomic": "^0.1.1",
+    "typescript": "^4.3.5"
   }
 }

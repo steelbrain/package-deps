@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "jsx": "preserve",
-    "module": "CommonJS",
+    "module": "commonjs",
     "esModuleInterop": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
@@ -10,11 +8,11 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "lib": ["es2015", "es2016", "es2017", "es2018", "esnext", "DOM"],
+    "target": "es2018",
+    "lib": ["es2018", "DOM"],
     "declaration": true,
     "outDir": "lib"
   },
-  "include": ["src"],
   "exclude": [
     "node_modules"
   ]
