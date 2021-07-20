@@ -1,5 +1,12 @@
 # Changelog
 
+## 8.0.0
+
+- Potentially unstable: Minify the output to reduce size to ~10kb from ~30kb. (Thanks @aminya)
+
+Although none of the APIs have changed, this change may be potentially unstable, so marking it as semver-major
+so consumers have to opt-in to this.
+
 ## 7.2.2
 
 - Another attempt to fix Windows usages - #332 (Thanks @UziTech)
