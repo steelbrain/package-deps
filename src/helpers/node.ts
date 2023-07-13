@@ -29,7 +29,7 @@ export async function getDependencies(packageName: string): Promise<(Dependency 
 }
 
 export async function resolveDependencyPath(packageName: string): Promise<string | null> {
-  const packageDirectory = path.join(process.env.ATOM_HOME ?? path.join(os.homedir(), '.atom'), 'packages', packageName)
+  const packageDirectory = path.join(process.env.ATOM_HOME ?? path.join(os.homedir(), '.pulsar'), 'packages', packageName)
 
   try {
     await fs.promises.access(packageDirectory, fs.constants.R_OK)

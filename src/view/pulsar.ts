@@ -58,7 +58,7 @@ export function confirmPackagesToInstall({
               atom.notifications.addInfo('How to reset package-deps memory', {
                 dismissable: true,
                 description:
-                  "To modify the list of ignored files invoke 'Application: Open Your Config' and change the 'atom-package-deps' section",
+                  "To modify the list of ignored files invoke 'Application: Open Your Config' and change the 'pulsar-package-deps' section",
               })
             }
             notification!.dismiss()

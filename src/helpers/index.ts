@@ -8,7 +8,7 @@ import {
   getDependencies as getDependenciesAtom,
   resolveDependencyPath as resolveDependencyPathAtom,
   getInstalledDependencyVersion as getInstalledDependencyVersionAtom,
-} from './atom'
+} from './pulsar'
 import {
   getDependencies as getDependenciesNode,
   resolveDependencyPath as resolveDependencyPathNode,
@@ -126,9 +126,9 @@ const INSTALL_VALID_TICKS = new Set(['✓', 'done'])
 const INSTALL_VALIDATION_REGEXP = /(?:Installing|Moving) (.*?) to .* (.*)/
 // Example success output: Uninstalling linter-ui-default ✓
 export async function installPackage(dependency: DependencyResolved): Promise<void> {
-  const apmPath = IS_ATOM ? `"${atom.packages.getApmPath()}"` : 'apm'
+  const ppmPath = IS_ATOM ? `"${atom.packages.getApmPath()}"` : 'ppm'
 
-  const { stdout, stderr } = await spawn(apmPath, ['install', dependency.name, '--production', '--color', 'false'], {
+  const { stdout, stderr } = await spawn(ppmPath, ['install', dependency.name, '--production', '--color', 'false'], {
     shell: true,
   })
 

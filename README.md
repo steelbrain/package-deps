@@ -1,6 +1,6 @@
 # Atom-Package-Deps
 
-Atom-Package-Deps is a module that lets your atom package depend on other atom packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
+Atom-Package-Deps is a module that lets your pulsar package depend on other pulsar packages, It's quite simple and shows a nice progress bar as a notification as the packages are installed.
 
 #### How it works?
 
@@ -44,7 +44,7 @@ Because the package installation is async, it returns a promise that resolves wh
 module.exports = {
   activate() {
     // replace the example argument 'linter-ruby' with the name of this Atom package
-    require('atom-package-deps')
+    require('pulsar-package-deps')
       .install('linter-ruby')
       // ^ NOTE: This is the name of YOUR package, NOT the package you want to install.
       .then(function() {
@@ -65,7 +65,7 @@ export function install(packageName: string, hideUserPrompt: boolean = false)
 Alternatively, if you want to install dependencies via CLI, this package exposes a bin for that
 
 ```
-Usage: atom-package-deps <directory> <hideUserPrompt = true>
+Usage: pulsar-package-deps <directory> <hideUserPrompt = true>
 ```
 
 #### Screenshots

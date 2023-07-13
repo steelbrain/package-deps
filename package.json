@@ -1,5 +1,5 @@
 {
-  "name": "atom-package-deps",
+  "name": "pulsar-package-deps",
   "version": "8.0.0",
   "description": "Automatically install package dependencies",
   "main": "lib/index.js",
@@ -19,7 +19,7 @@
     "url": "git+https://github.com/steelbrain/package-deps.git"
   },
   "keywords": [
-    "atom"
+    "pulsar"
   ],
   "author": "steelbrain",
   "license": "MIT",

@@ -3,7 +3,7 @@ import path from 'path'
 import { install } from './index'
 
 if (process.argv.length !== 3) {
-  console.error('Usage: atom-package-deps <directory>')
+  console.error('Usage: pulsar-package-deps <directory>')
   process.exit(1)
 }
 const [, , directory, hideUserPromptStr] = process.argv
